@@ -1,12 +1,43 @@
+import { LLMFactory } from '@/constants/llm';
 import { useTranslate } from '@/hooks/common-hooks';
 import { IModalProps } from '@/interfaces/common';
 import { IAddLlmRequestBody } from '@/interfaces/request/llm';
-import { Flex, Form, Input, Modal, Select, Space, Switch } from 'antd';
+import {
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Space,
+  Switch,
+} from 'antd';
 import omit from 'lodash/omit';
 
 type FieldType = IAddLlmRequestBody & { vision: boolean };
 
 const { Option } = Select;
+
+const llmFactoryToUrlMap = {
+  [LLMFactory.Ollama]:
+    'https://github.com/infiniflow/ragflow/blob/main/docs/guides/models/deploy_local_llm.mdx',
+  [LLMFactory.Xinference]:
+    'https://inference.readthedocs.io/en/latest/user_guide',
+  [LLMFactory.ModelScope]:
+    'https://www.modelscope.cn/docs/model-service/API-Inference/intro',
+  [LLMFactory.LocalAI]: 'https://localai.io/docs/getting-started/models/',
+  [LLMFactory.LMStudio]: 'https://lmstudio.ai/docs/basics',
+  [LLMFactory.OpenAiAPICompatible]:
+    'https://platform.openai.com/docs/models/gpt-4',
+  [LLMFactory.TogetherAI]: 'https://docs.together.ai/docs/deployment-options',
+  [LLMFactory.Replicate]: 'https://replicate.com/docs/topics/deployments',
+  [LLMFactory.OpenRouter]: 'https://openrouter.ai/docs',
+  [LLMFactory.HuggingFace]:
+    'https://huggingface.co/docs/text-embeddings-inference/quick_tour',
+  [LLMFactory.GPUStack]: 'https://docs.gpustack.ai/latest/quickstart',
+  [LLMFactory.VLLM]: 'https://docs.vllm.ai/en/latest/',
+};
+type LlmFactory = keyof typeof llmFactoryToUrlMap;
 
 const OllamaModal = ({
   visible,
@@ -30,12 +61,47 @@ const OllamaModal = ({
       ...omit(values, ['vision']),
       model_type: modelType,
       llm_factory: llmFactory,
+      max_tokens: values.max_tokens,
     };
     console.info(data);
 
     onOk?.(data);
   };
-
+  const url =
+    llmFactoryToUrlMap[llmFactory as LlmFactory] ||
+    'https://github.com/infiniflow/ragflow/blob/main/docs/guides/models/deploy_local_llm.mdx';
+  const optionsMap = {
+    [LLMFactory.HuggingFace]: [
+      { value: 'embedding', label: 'embedding' },
+      { value: 'chat', label: 'chat' },
+      { value: 'rerank', label: 'rerank' },
+    ],
+    [LLMFactory.Xinference]: [
+      { value: 'chat', label: 'chat' },
+      { value: 'embedding', label: 'embedding' },
+      { value: 'rerank', label: 'rerank' },
+      { value: 'image2text', label: 'image2text' },
+      { value: 'speech2text', label: 'sequence2text' },
+      { value: 'tts', label: 'tts' },
+    ],
+    [LLMFactory.ModelScope]: [{ value: 'chat', label: 'chat' }],
+    [LLMFactory.GPUStack]: [
+      { value: 'chat', label: 'chat' },
+      { value: 'embedding', label: 'embedding' },
+      { value: 'rerank', label: 'rerank' },
+      { value: 'speech2text', label: 'sequence2text' },
+      { value: 'tts', label: 'tts' },
+    ],
+    Default: [
+      { value: 'chat', label: 'chat' },
+      { value: 'embedding', label: 'embedding' },
+      { value: 'rerank', label: 'rerank' },
+      { value: 'image2text', label: 'image2text' },
+    ],
+  };
+  const getOptions = (factory: string) => {
+    return optionsMap[factory as keyof typeof optionsMap] || optionsMap.Default;
+  };
   return (
     <Modal
       title={t('addLlmTitle', { name: llmFactory })}
@@ -46,11 +112,7 @@ const OllamaModal = ({
       footer={(originNode: React.ReactNode) => {
         return (
           <Flex justify={'space-between'}>
-            <a
-              href={`https://github.com/infiniflow/ragflow/blob/main/docs/guides/deploy_local_llm.mdx`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={url} target="_blank" rel="noreferrer">
               {t('ollamaLink', { name: llmFactory })}
             </a>
             <Space>{originNode}</Space>
@@ -68,14 +130,15 @@ const OllamaModal = ({
         <Form.Item<FieldType>
           label={t('modelType')}
           name="model_type"
-          initialValue={'chat'}
+          initialValue={'embedding'}
           rules={[{ required: true, message: t('modelTypeMessage') }]}
         >
           <Select placeholder={t('modelTypeMessage')}>
-            <Option value="chat">chat</Option>
-            <Option value="embedding">embedding</Option>
-            <Option value="rerank">rerank</Option>
-            <Option value="image2text">image2text</Option>
+            {getOptions(llmFactory).map((option) => (
+              <Option key={option.value} value={option.value}>
+                {option.label}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item<FieldType>
@@ -99,6 +162,31 @@ const OllamaModal = ({
         >
           <Input placeholder={t('apiKeyMessage')} />
         </Form.Item>
+        <Form.Item<FieldType>
+          label={t('maxTokens')}
+          name="max_tokens"
+          rules={[
+            { required: true, message: t('maxTokensMessage') },
+            {
+              type: 'number',
+              message: t('maxTokensInvalidMessage'),
+            },
+            ({}) => ({
+              validator(_, value) {
+                if (value < 0) {
+                  return Promise.reject(new Error(t('maxTokensMinMessage')));
+                }
+                return Promise.resolve();
+              },
+            }),
+          ]}
+        >
+          <InputNumber
+            placeholder={t('maxTokensTip')}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+
         <Form.Item noStyle dependencies={['model_type']}>
           {({ getFieldValue }) =>
             getFieldValue('model_type') === 'chat' && (

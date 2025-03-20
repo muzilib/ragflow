@@ -1,5 +1,8 @@
-import { ReactComponent as DeleteIcon } from '@/assets/svg/delete.svg';
 import { useTranslate } from '@/hooks/common-hooks';
+import {
+  IListResult,
+  useFetchParentFolderList,
+} from '@/hooks/file-manager-hooks';
 import {
   DownOutlined,
   FileTextOutlined,
@@ -24,11 +27,7 @@ import {
   useSelectBreadcrumbItems,
 } from './hooks';
 
-import SvgIcon from '@/components/svg-icon';
-import {
-  IListResult,
-  useFetchParentFolderList,
-} from '@/hooks/file-manager-hooks';
+import { FolderInput, Trash2 } from 'lucide-react';
 import styles from './index.less';
 
 interface IProps
@@ -127,8 +126,8 @@ const FileToolbar = ({
         onClick: handleRemoveFile,
         label: (
           <Flex gap={10}>
-            <span className={styles.deleteIconWrapper}>
-              <DeleteIcon width={18} />
+            <span className="flex items-center justify-center">
+              <Trash2 className="size-4" />
             </span>
             <b>{t('delete', { keyPrefix: 'common' })}</b>
           </Flex>
@@ -139,8 +138,8 @@ const FileToolbar = ({
         onClick: handleShowMoveFileModal,
         label: (
           <Flex gap={10}>
-            <span className={styles.deleteIconWrapper}>
-              <SvgIcon name={`move`} width={18}></SvgIcon>
+            <span className="flex items-center justify-center">
+              <FolderInput className="size-4"></FolderInput>
             </span>
             <b>{t('move', { keyPrefix: 'common' })}</b>
           </Flex>

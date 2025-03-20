@@ -1,3 +1,6 @@
+#
+#  Copyright 2025 The InfiniFlow Authors. All Rights Reserved.
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
@@ -38,7 +41,7 @@ class TableStructureRecognizer(Recognizer):
             super().__init__(self.labels, "tsr", os.path.join(
                     get_project_base_directory(),
                     "rag/res/deepdoc"))
-        except Exception as e:
+        except Exception:
             super().__init__(self.labels, "tsr", snapshot_download(repo_id="InfiniFlow/deepdoc",
                                               local_dir=os.path.join(get_project_base_directory(), "rag/res/deepdoc"),
                                               local_dir_use_symlinks=False))
@@ -117,7 +120,7 @@ class TableStructureRecognizer(Recognizer):
         for p, n in patt:
             if re.search(p, b["text"].strip()):
                 return n
-        tks = [t for t in rag_tokenizer.tokenize(b["text"]).split(" ") if len(t) > 1]
+        tks = [t for t in rag_tokenizer.tokenize(b["text"]).split() if len(t) > 1]
         if len(tks) > 3:
             if len(tks) < 12:
                 return "Tx"
@@ -174,7 +177,7 @@ class TableStructureRecognizer(Recognizer):
         colwm = np.min(colwm) if colwm else 0
         crosspage = len(set([b["page_number"] for b in boxes])) > 1
         if crosspage:
-            boxes = Recognizer.sort_X_firstly(boxes, colwm / 2, False)
+            boxes = Recognizer.sort_X_firstly(boxes, colwm / 2)
         else:
             boxes = Recognizer.sort_C_firstly(boxes, colwm / 2)
         boxes[0]["cn"] = 0

@@ -22,16 +22,23 @@ export interface IUserInfo {
 
 export type TaskExecutorElapsed = Record<string, number[]>;
 
+export interface TaskExecutorHeartbeatItem {
+  boot_at: string;
+  current: null;
+  done: number;
+  failed: number;
+  lag: number;
+  name: string;
+  now: string;
+  pending: number;
+}
+
 export interface ISystemStatus {
   es: Es;
   storage: Storage;
   database: Database;
   redis: Redis;
-  task_executor: {
-    error?: string;
-    status: string;
-    elapsed?: TaskExecutorElapsed;
-  };
+  task_executor_heartbeat: Record<string, TaskExecutorHeartbeatItem[]>;
 }
 
 interface Redis {
@@ -59,4 +66,30 @@ interface Es {
   error: string;
   number_of_nodes: number;
   active_shards: number;
+}
+
+export interface ITenantUser {
+  id: string;
+  avatar: string;
+  delta_seconds: number;
+  email: string;
+  is_active: string;
+  is_anonymous: string;
+  is_authenticated: string;
+  is_superuser: boolean;
+  nickname: string;
+  role: string;
+  status: string;
+  update_date: string;
+  user_id: string;
+}
+
+export interface ITenant {
+  avatar: string;
+  delta_seconds: number;
+  email: string;
+  nickname: string;
+  role: string;
+  tenant_id: string;
+  update_date: string;
 }

@@ -1,3 +1,5 @@
+import { RunningStatus } from '@/constants/knowledge';
+
 export interface IDocumentInfo {
   chunk_num: number;
   create_date: string;
@@ -7,13 +9,13 @@ export interface IDocumentInfo {
   kb_id: string;
   location: string;
   name: string;
-  parser_config: Parserconfig;
+  parser_config: IParserConfig;
   parser_id: string;
-  process_begin_at: null;
+  process_begin_at?: string;
   process_duation: number;
   progress: number;
   progress_msg: string;
-  run: string;
+  run: RunningStatus;
   size: number;
   source_type: string;
   status: string;
@@ -22,14 +24,26 @@ export interface IDocumentInfo {
   type: string;
   update_date: string;
   update_time: number;
+  meta_fields?: Record<string, any>;
 }
 
-interface Parserconfig {
-  chunk_token_num: number;
-  layout_recognize: boolean;
-  raptor: Raptor;
+export interface IParserConfig {
+  delimiter?: string;
+  html4excel?: boolean;
+  layout_recognize?: boolean;
+  pages: any[];
+  raptor?: Raptor;
+  graphrag?: GraphRag;
 }
 
 interface Raptor {
   use_raptor: boolean;
+}
+
+interface GraphRag {
+  community?: boolean;
+  entity_types?: string[];
+  method?: string;
+  resolution?: boolean;
+  use_graphrag?: boolean;
 }

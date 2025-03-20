@@ -30,6 +30,7 @@ import { EditableCell, EditableRow } from './editable-cell';
 
 import Rerank from '@/components/rerank';
 import TopNItem from '@/components/top-n-item';
+import { UseKnowledgeGraphItem } from '@/components/use-knowledge-graph-item';
 import { useTranslate } from '@/hooks/common-hooks';
 import { useSelectPromptConfigParameters } from '../hooks';
 import styles from './index.less';
@@ -160,6 +161,25 @@ const PromptEngine = (
       <Divider></Divider>
       <SimilaritySlider isTooltipShown></SimilaritySlider>
       <TopNItem></TopNItem>
+      <Form.Item
+        label={t('multiTurn')}
+        tooltip={t('multiTurnTip')}
+        name={['prompt_config', 'refine_multiturn']}
+        initialValue={false}
+      >
+        <Switch></Switch>
+      </Form.Item>
+      <UseKnowledgeGraphItem
+        filedName={['prompt_config', 'use_kg']}
+      ></UseKnowledgeGraphItem>
+      <Form.Item
+        label={t('reasoning')}
+        tooltip={t('reasoningTip')}
+        name={['prompt_config', 'reasoning']}
+        initialValue={false}
+      >
+        <Switch></Switch>
+      </Form.Item>
       <Rerank></Rerank>
       <section className={classNames(styles.variableContainer)}>
         <Row align={'middle'} justify="end">

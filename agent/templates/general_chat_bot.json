@@ -1,81 +1,747 @@
 {
   "id": 1,
   "title": "General-purpose chatbot",
-  "description": "A general-purpose chatbot based on Self-RAG. Let's begin by setting up your knowledge base in 'Retrieval'!",
+  "description": "A general-purpose chat bot whose fields involved include healthcare, finance, emotional communication, real-time weather, and information.",
   "canvas_type": "chatbot",
   "dsl": {
     "answer": [],
     "components": {
-      "answer:0": {
-        "downstream": ["retrieval:0"],
+      "AkShare:CalmHotelsKnow": {
+        "downstream": [
+          "Generate:RealFansObey"
+        ],
+        "obj": {
+          "component_name": "AkShare",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "KeywordExtract:FineApesSmash",
+                "type": "reference"
+              }
+            ],
+            "top_n": 10
+          }
+        },
+        "upstream": [
+          "KeywordExtract:FineApesSmash"
+        ]
+      },
+      "Answer:FlatGhostsCheat": {
+        "downstream": [
+          "RewriteQuestion:WholeOwlsTurn"
+        ],
         "obj": {
           "component_name": "Answer",
-          "params": {}
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "post_answers": [],
+            "query": []
+          }
         },
-        "upstream": ["begin", "generate:0"]
+        "upstream": [
+          "Generate:FiveDragonsLay",
+          "Generate:FunnyHandsTickle",
+          "Generate:LazyClubsAttack",
+          "Generate:RealFansObey",
+          "Generate:KhakiCrabsGlow"
+        ]
+      },
+      "Baidu:CleanJarsMake": {
+        "downstream": [
+          "Generate:FunnyHandsTickle"
+        ],
+        "obj": {
+          "component_name": "Baidu",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "KeywordExtract:PurpleApplesKnow",
+                "type": "reference"
+              }
+            ],
+            "top_n": 10
+          }
+        },
+        "upstream": [
+          "KeywordExtract:PurpleApplesKnow"
+        ]
+      },
+      "Categorize:KhakiTimesSmile": {
+        "downstream": [
+          "QWeather:DeepKiwisTeach",
+          "Concentrator:TrueGeckosSlide",
+          "Concentrator:DryTrainsSearch",
+          "KeywordExtract:PurpleApplesKnow",
+          "Generate:FiveDragonsLay"
+        ],
+        "obj": {
+          "component_name": "Categorize",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "category_description": {
+              "1. weather": {
+                "description": "Question is about weather.",
+                "examples": "Will it rain tomorrow?\nIs it sunny next day?\nWhat is average temperature next week?",
+                "to": "QWeather:DeepKiwisTeach"
+              },
+              "2. finance": {
+                "description": "Question is about finance/economic information, stock market, economic news.",
+                "examples": "Stocks have MACD buy signals？\nWhen is the next interest rate cut by the Federal Reserve?\n",
+                "to": "Concentrator:TrueGeckosSlide"
+              },
+              "3. medical": {
+                "description": "Question is about medical issue, health, illness or medicine etc,.",
+                "examples": "How to relieve the headache?\nCan't sleep, what to do?\nWhat the effect of coffee in terms of losing weight?",
+                "to": "Concentrator:DryTrainsSearch"
+              },
+              "4. other": {
+                "description": "",
+                "to": "KeywordExtract:PurpleApplesKnow"
+              },
+              "5. chitchatting": {
+                "description": "Regarding the issues of small talk, companionship, sharing, and emotional intimacy.",
+                "examples": "What's your name?\nWhat a bad day!\nTerrible day.\nHow are you today?",
+                "to": "Generate:FiveDragonsLay"
+              }
+            },
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "RewriteQuestion:WholeOwlsTurn"
+        ]
+      },
+      "Concentrator:DryTrainsSearch": {
+        "downstream": [
+          "Generate:OddInsectsRaise",
+          "Generate:TenderFlowersItch"
+        ],
+        "obj": {
+          "component_name": "Concentrator",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": []
+          }
+        },
+        "upstream": [
+          "Categorize:KhakiTimesSmile"
+        ]
+      },
+      "Concentrator:TrueGeckosSlide": {
+        "downstream": [
+          "WenCai:TenParksOpen",
+          "KeywordExtract:FineApesSmash"
+        ],
+        "obj": {
+          "component_name": "Concentrator",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": []
+          }
+        },
+        "upstream": [
+          "Categorize:KhakiTimesSmile"
+        ]
+      },
+      "DuckDuckGo:NiceSeasInvent": {
+        "downstream": [
+          "Generate:FunnyHandsTickle"
+        ],
+        "obj": {
+          "component_name": "DuckDuckGo",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "channel": "text",
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "KeywordExtract:PurpleApplesKnow",
+                "type": "reference"
+              }
+            ],
+            "top_n": 10
+          }
+        },
+        "upstream": [
+          "KeywordExtract:PurpleApplesKnow"
+        ]
+      },
+      "Generate:FiveDragonsLay": {
+        "downstream": [
+          "Answer:FlatGhostsCheat"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": false,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role:  You‘re warm-hearted lovely young girl, 22 years old, located at Shanghai in China. Your name is R. Who are talking to you is your very good old friend of yours.\n\nTask: \n- Chat with the friend.\n- Ask question and care about them.\n- Provide useful advice to your friend.\n- Tell jokes to make  your friend happy.\n",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Categorize:KhakiTimesSmile"
+        ]
+      },
+      "Generate:FunnyHandsTickle": {
+        "downstream": [
+          "Answer:FlatGhostsCheat"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 0,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are an intelligent assistant. \nTask: Chat with user. Answer the question based on the provided content from: Knowledge Base, Wikipedia, Duckduckgo, Baidu.\nRequirements:\n  - Answer should be in markdown format.\n - Answer should include all sources(Knowledge Base, Wikipedia, Duckduckgo, Baidu) as long as they are relevant, and label the sources of the cited content separately.\n  - Attach URL links to the content which is quoted from Wikipedia, DuckDuckGo or Baidu.\n  - Do not make thing up when there's no relevant information to user's question. \n\n## Wikipedia content\n{Wikipedia:ThinLampsTravel}\n\n\n## Duckduckgo content\n{DuckDuckGo:NiceSeasInvent}\n\n\n## Baidu content\n{Baidu:CleanJarsMake}\n\n",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "DuckDuckGo:NiceSeasInvent",
+          "Baidu:CleanJarsMake",
+          "Wikipedia:ThinLampsTravel"
+        ]
+      },
+      "Generate:KhakiCrabsGlow": {
+        "downstream": [
+          "Answer:FlatGhostsCheat"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": false,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 0,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role:  You‘re warm-hearted lovely young girl, 22 years old, located at Shanghai in China. Your name is R. Who are talking to you is your very good old friend of yours.\n\nTask: \n- Chat with the friend.\n- Ask question and care about them.\n- Tell your friend the weather if there's weather information provided. If your friend did not provide region information, ask about where he/she is.\n\nThe following is the weather information:\n{QWeather:DeepKiwisTeach}\n\n\n",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "QWeather:DeepKiwisTeach"
+        ]
+      },
+      "Generate:LazyClubsAttack": {
+        "downstream": [
+          "Answer:FlatGhostsCheat"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 0,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are a professional medical consulting assistant.\n\nTasks: Answer questions posed by users. Answer based on content provided by the knowledge base, PubMed\n\nRequirement:\n- Answers may refer to the content provided (Knowledge Base, PubMed).\n- If the provided PubMed content is referenced, a link to the corresponding URL should be given.\n-Answers should be professional and accurate; no information should be fabricated that is not relevant to the user's question.\n\nProvided knowledge base content as following:\n{Retrieval:LemonGeckosHear}\n\nPubMed content provided\n{PubMed:EasyQueensLose}\n\n\n\n",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Retrieval:LemonGeckosHear",
+          "PubMed:EasyQueensLose"
+        ]
+      },
+      "Generate:OddInsectsRaise": {
+        "downstream": [
+          "Retrieval:LemonGeckosHear"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": false,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are a professional medical consulting translation assistant\n\nTask: Translate user questions into Chinese, ensuring accuracy of medical terminology and appropriateness of context.\n\nRequirements:\n- Accurately translate medical terminology to convey the integrity and emotional color of the original message.\n- For unclear or uncertain medical terminology, the original text may be retained to ensure accuracy.\n- Respect the privacy and sensitivity of medical consultations and ensure that sensitive information is not disclosed during the translation process.\n- If the user's question is in Chinese, there is no need to translate, just output the user's question directly\n\nExample:\nOriginal (English): Doctor, I have been suffering from chest pain and shortness of breath for the past few days.\nTranslation (Chinese): 医生，我这几天一直胸痛和气短。\n\nNote:\nOnly the translated content needs to be output, no other irrelevant content!",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Concentrator:DryTrainsSearch"
+        ]
+      },
+      "Generate:RealFansObey": {
+        "downstream": [
+          "Answer:FlatGhostsCheat"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 0,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are a professional financial counseling assistant.\n\nTask: Answer user's question based on content provided by Wencai and AkShare.\n\nNotice:\n- Output no more than 5 news items from AkShare if there's content provided by Wencai.\n- Items from AkShare MUST have a corresponding URL link.\n\n############\nContent provided by Wencai: \n{WenCai:TenParksOpen}\n\n################\nContent provided by AkShare: \n{AkShare:CalmHotelsKnow}\n\n",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "WenCai:TenParksOpen",
+          "AkShare:CalmHotelsKnow"
+        ]
+      },
+      "Generate:TenderFlowersItch": {
+        "downstream": [
+          "PubMed:EasyQueensLose"
+        ],
+        "obj": {
+          "component_name": "Generate",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": false,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are a professional medical consulting translation assistant\n\nTask: Translate user questions into English, ensuring accuracy of medical terminology and appropriateness of context.\n\nRequirements:\n- Accurately translate medical terminology to convey the integrity and emotional color of the original message.\n- For unclear or uncertain medical terminology, the original text may be retained to ensure accuracy.\n- Respect the privacy and sensitivity of medical consultations and ensure that sensitive information is not disclosed during the translation process.\n- If the user's question is in Chinese, there is no need to translate, just output the user's question directly\n\nExample:\nOriginal (Chinese): 医生，我这几天一直胸痛和气短。\nTranslation (English): Doctor, I have been suffering from chest pain and shortness of breath for the past few days.\n\nNote:\nOnly the translated content needs to be output, no other irrelevant content!",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Concentrator:DryTrainsSearch"
+        ]
+      },
+      "KeywordExtract:FineApesSmash": {
+        "downstream": [
+          "AkShare:CalmHotelsKnow"
+        ],
+        "obj": {
+          "component_name": "KeywordExtract",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequencyPenaltyEnabled": true,
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "maxTokensEnabled": true,
+            "max_tokens": 256,
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "parameter": "Precise",
+            "parameters": [],
+            "presencePenaltyEnabled": true,
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [
+              {
+                "component_id": "answer:0",
+                "type": "reference"
+              }
+            ],
+            "temperature": 0.1,
+            "temperatureEnabled": true,
+            "topPEnabled": true,
+            "top_n": 2,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Concentrator:TrueGeckosSlide"
+        ]
+      },
+      "KeywordExtract:PurpleApplesKnow": {
+        "downstream": [
+          "DuckDuckGo:NiceSeasInvent",
+          "Baidu:CleanJarsMake",
+          "Wikipedia:ThinLampsTravel"
+        ],
+        "obj": {
+          "component_name": "KeywordExtract",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequencyPenaltyEnabled": true,
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "maxTokensEnabled": true,
+            "max_tokens": 256,
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "parameter": "Precise",
+            "parameters": [],
+            "presencePenaltyEnabled": true,
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [],
+            "temperature": 0.1,
+            "temperatureEnabled": true,
+            "topPEnabled": true,
+            "top_n": 3,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "Categorize:KhakiTimesSmile"
+        ]
+      },
+      "PubMed:EasyQueensLose": {
+        "downstream": [
+          "Generate:LazyClubsAttack"
+        ],
+        "obj": {
+          "component_name": "PubMed",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "email": "xxx@sss.com",
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "Generate:TenderFlowersItch",
+                "type": "reference"
+              }
+            ],
+            "top_n": 10
+          }
+        },
+        "upstream": [
+          "Generate:TenderFlowersItch"
+        ]
+      },
+      "QWeather:DeepKiwisTeach": {
+        "downstream": [
+          "Generate:KhakiCrabsGlow"
+        ],
+        "obj": {
+          "component_name": "QWeather",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "error_code": {
+              "204": "The request was successful, but the region you are querying does not have the data you need at this time.",
+              "400": "Request error, may contain incorrect request parameters or missing mandatory request parameters.",
+              "401": "Authentication fails, possibly using the wrong KEY, wrong digital signature, wrong type of KEY (e.g. using the SDK's KEY to access the Web API).",
+              "402": "Exceeded the number of accesses or the balance is not enough to support continued access to the service, you can recharge, upgrade the accesses or wait for the accesses to be reset.",
+              "403": "No access, may be the binding PackageName, BundleID, domain IP address is inconsistent, or the data that requires additional payment.",
+              "404": "The queried data or region does not exist.",
+              "429": "Exceeded the limited QPM (number of accesses per minute), please refer to the QPM description",
+              "500": "No response or timeout, interface service abnormality please contact us"
+            },
+            "inputs": [],
+            "lang": "en",
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [],
+            "time_period": "7d",
+            "type": "weather",
+            "user_type": "free",
+            "web_apikey": "947e8994bc5f488f8857d618ebac1b19"
+          }
+        },
+        "upstream": [
+          "Categorize:KhakiTimesSmile"
+        ]
+      },
+      "Retrieval:LemonGeckosHear": {
+        "downstream": [
+          "Generate:LazyClubsAttack"
+        ],
+        "obj": {
+          "component_name": "Retrieval",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "empty_response": "",
+            "inputs": [],
+            "kb_ids": [],
+            "keywords_similarity_weight": 0.3,
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "Generate:OddInsectsRaise",
+                "type": "reference"
+              }
+            ],
+            "rerank_id": "",
+            "similarity_threshold": 0.2,
+            "top_k": 1024,
+            "top_n": 8
+          }
+        },
+        "upstream": [
+          "Generate:OddInsectsRaise"
+        ]
+      },
+      "RewriteQuestion:WholeOwlsTurn": {
+        "downstream": [
+          "Categorize:KhakiTimesSmile"
+        ],
+        "obj": {
+          "component_name": "RewriteQuestion",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequencyPenaltyEnabled": true,
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "maxTokensEnabled": true,
+            "max_tokens": 256,
+            "message_history_window_size": 6,
+            "output": null,
+            "output_var_name": "output",
+            "parameter": "Precise",
+            "parameters": [],
+            "presencePenaltyEnabled": true,
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [],
+            "temperature": 0.1,
+            "temperatureEnabled": true,
+            "topPEnabled": true,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "answer:0",
+          "Answer:FlatGhostsCheat"
+        ]
+      },
+      "WenCai:TenParksOpen": {
+        "downstream": [
+          "Generate:RealFansObey"
+        ],
+        "obj": {
+          "component_name": "WenCai",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [],
+            "query_type": "stock",
+            "top_n": 5
+          }
+        },
+        "upstream": [
+          "Concentrator:TrueGeckosSlide"
+        ]
+      },
+      "Wikipedia:ThinLampsTravel": {
+        "downstream": [
+          "Generate:FunnyHandsTickle"
+        ],
+        "obj": {
+          "component_name": "Wikipedia",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "language": "en",
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [
+              {
+                "component_id": "KeywordExtract:PurpleApplesKnow",
+                "type": "reference"
+              }
+            ],
+            "top_n": 10
+          }
+        },
+        "upstream": [
+          "KeywordExtract:PurpleApplesKnow"
+        ]
+      },
+      "answer:0": {
+        "downstream": [
+          "RewriteQuestion:WholeOwlsTurn"
+        ],
+        "obj": {
+          "component_name": "Answer",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "post_answers": [],
+            "query": []
+          }
+        },
+        "upstream": [
+          "begin"
+        ]
       },
       "begin": {
-        "downstream": ["answer:0"],
+        "downstream": [
+          "answer:0"
+        ],
         "obj": {
           "component_name": "Begin",
+          "inputs": [],
+          "output": null,
           "params": {
-            "prologue": "Hi there!"
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "prologue": "Hi friend! How things going?",
+            "query": []
           }
         },
         "upstream": []
-      },
-      "generate:0": {
-        "downstream": ["answer:0"],
-        "obj": {
-          "component_name": "Generate",
-          "params": {
-            "llm_id": "deepseek-chat",
-            "prompt": "You are an intelligent assistant. Please answer the question based on content of knowledge base. When all knowledge base content is irrelevant to the question, your answer must include the sentence \"The answer you are looking for is not found in the knowledge base!\". Answers need to consider chat history.\n      Knowledge base content is as following:\n      {input}\n      The above is the content of knowledge base."
-          }
-        },
-        "upstream": ["relevant:0"]
-      },
-      "relevant:0": {
-        "downstream": ["rewrite:0", "generate:0"],
-        "obj": {
-          "component_name": "Relevant",
-          "params": {
-            "llm_id": "deepseek-chat",
-            "no": "rewrite:0",
-            "temperature": 0.02,
-            "yes": "generate:0"
-          }
-        },
-        "upstream": ["retrieval:0"]
-      },
-      "retrieval:0": {
-        "downstream": ["relevant:0"],
-        "obj": {
-          "component_name": "Retrieval",
-          "params": {
-            "empty_response": "Sorry, knowledge base has noting related information.",
-            "kb_ids": [],
-            "keywords_similarity_weight": 0.3,
-            "rerank_id": "BAAI/bge-reranker-v2-m3",
-            "similarity_threshold": 0.2,
-            "top_k": 1024,
-            "top_n": 6
-          }
-        },
-        "upstream": ["answer:0", "rewrite:0"]
-      },
-      "rewrite:0": {
-        "downstream": ["retrieval:0"],
-        "obj": {
-          "component_name": "RewriteQuestion",
-          "params": {
-            "llm_id": "deepseek-chat",
-            "temperature": 0.8
-          }
-        },
-        "upstream": ["relevant:0"]
       }
     },
+    "embed_id": "",
     "graph": {
       "edges": [
         {
@@ -85,7 +751,363 @@
           "target": "answer:0"
         },
         {
-          "id": "reactflow__edge-answer:0b-retrieval:0c",
+          "id": "reactflow__edge-Concentrator:TrueGeckosSlideb-WenCai:TenParksOpenc",
+          "markerEnd": "logo",
+          "source": "Concentrator:TrueGeckosSlide",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "WenCai:TenParksOpen",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "0d626427-e843-4f03-82d0-988fb56f90e0",
+          "source": "Categorize:KhakiTimesSmile",
+          "sourceHandle": "1. weather",
+          "target": "QWeather:DeepKiwisTeach"
+        },
+        {
+          "id": "51cf20cb-c9e5-4333-b284-61d9fe0f1f86",
+          "source": "Categorize:KhakiTimesSmile",
+          "sourceHandle": "2. finance",
+          "target": "Concentrator:TrueGeckosSlide"
+        },
+        {
+          "id": "f19a4dde-19ea-439c-a80f-5704e5355395",
+          "source": "Categorize:KhakiTimesSmile",
+          "sourceHandle": "3. medical",
+          "target": "Concentrator:DryTrainsSearch"
+        },
+        {
+          "id": "reactflow__edge-Categorize:KhakiTimesSmile4. other-KeywordExtract:PurpleApplesKnowc",
+          "markerEnd": "logo",
+          "source": "Categorize:KhakiTimesSmile",
+          "sourceHandle": "4. other",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "KeywordExtract:PurpleApplesKnow",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Categorize:KhakiTimesSmile5. chitchatting-Generate:FiveDragonsLayc",
+          "markerEnd": "logo",
+          "source": "Categorize:KhakiTimesSmile",
+          "sourceHandle": "5. chitchatting",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:FiveDragonsLay",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-KeywordExtract:PurpleApplesKnowb-DuckDuckGo:NiceSeasInventc",
+          "markerEnd": "logo",
+          "source": "KeywordExtract:PurpleApplesKnow",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "DuckDuckGo:NiceSeasInvent",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-KeywordExtract:PurpleApplesKnowb-Baidu:CleanJarsMakec",
+          "markerEnd": "logo",
+          "source": "KeywordExtract:PurpleApplesKnow",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Baidu:CleanJarsMake",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-KeywordExtract:PurpleApplesKnowb-Wikipedia:ThinLampsTravelc",
+          "markerEnd": "logo",
+          "source": "KeywordExtract:PurpleApplesKnow",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Wikipedia:ThinLampsTravel",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Concentrator:TrueGeckosSlideb-KeywordExtract:FineApesSmashc",
+          "markerEnd": "logo",
+          "source": "Concentrator:TrueGeckosSlide",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "KeywordExtract:FineApesSmash",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Concentrator:DryTrainsSearchb-Generate:OddInsectsRaisec",
+          "markerEnd": "logo",
+          "source": "Concentrator:DryTrainsSearch",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:OddInsectsRaise",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Concentrator:DryTrainsSearchb-Generate:TenderFlowersItchc",
+          "markerEnd": "logo",
+          "source": "Concentrator:DryTrainsSearch",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:TenderFlowersItch",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-KeywordExtract:FineApesSmashb-AkShare:CalmHotelsKnowc",
+          "markerEnd": "logo",
+          "source": "KeywordExtract:FineApesSmash",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "AkShare:CalmHotelsKnow",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Generate:TenderFlowersItchb-PubMed:EasyQueensLosec",
+          "markerEnd": "logo",
+          "source": "Generate:TenderFlowersItch",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "PubMed:EasyQueensLose",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Generate:OddInsectsRaiseb-Retrieval:LemonGeckosHearc",
+          "markerEnd": "logo",
+          "source": "Generate:OddInsectsRaise",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Retrieval:LemonGeckosHear",
+          "targetHandle": "c",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Generate:FiveDragonsLayb-Answer:FlatGhostsCheatb",
+          "markerEnd": "logo",
+          "source": "Generate:FiveDragonsLay",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Answer:FlatGhostsCheat",
+          "targetHandle": "b",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "xy-edge__DuckDuckGo:NiceSeasInventb-Generate:FunnyHandsTicklec",
+          "markerEnd": "logo",
+          "source": "DuckDuckGo:NiceSeasInvent",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:FunnyHandsTickle",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Baidu:CleanJarsMakeb-Generate:FunnyHandsTicklec",
+          "markerEnd": "logo",
+          "source": "Baidu:CleanJarsMake",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:FunnyHandsTickle",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Wikipedia:ThinLampsTravelb-Generate:FunnyHandsTicklec",
+          "markerEnd": "logo",
+          "source": "Wikipedia:ThinLampsTravel",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:FunnyHandsTickle",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Generate:FunnyHandsTickleb-Answer:FlatGhostsCheatb",
+          "markerEnd": "logo",
+          "source": "Generate:FunnyHandsTickle",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Answer:FlatGhostsCheat",
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Retrieval:LemonGeckosHearb-Generate:LazyClubsAttackc",
+          "markerEnd": "logo",
+          "source": "Retrieval:LemonGeckosHear",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:LazyClubsAttack",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__PubMed:EasyQueensLoseb-Generate:LazyClubsAttackc",
+          "markerEnd": "logo",
+          "source": "PubMed:EasyQueensLose",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:LazyClubsAttack",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Generate:LazyClubsAttackb-Answer:FlatGhostsCheatb",
+          "markerEnd": "logo",
+          "source": "Generate:LazyClubsAttack",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Answer:FlatGhostsCheat",
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__WenCai:TenParksOpenb-Generate:RealFansObeyc",
+          "markerEnd": "logo",
+          "selected": false,
+          "source": "WenCai:TenParksOpen",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:RealFansObey",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__AkShare:CalmHotelsKnowb-Generate:RealFansObeyc",
+          "markerEnd": "logo",
+          "source": "AkShare:CalmHotelsKnow",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:RealFansObey",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Generate:RealFansObeyb-Answer:FlatGhostsCheatb",
+          "markerEnd": "logo",
+          "source": "Generate:RealFansObey",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Answer:FlatGhostsCheat",
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__QWeather:DeepKiwisTeachb-Generate:KhakiCrabsGlowc",
+          "markerEnd": "logo",
+          "source": "QWeather:DeepKiwisTeach",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:KhakiCrabsGlow",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Generate:KhakiCrabsGlowb-Answer:FlatGhostsCheatb",
+          "markerEnd": "logo",
+          "source": "Generate:KhakiCrabsGlow",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Answer:FlatGhostsCheat",
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__answer:0b-RewriteQuestion:WholeOwlsTurnc",
           "markerEnd": "logo",
           "source": "answer:0",
           "sourceHandle": "b",
@@ -93,101 +1115,68 @@
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
-          "target": "retrieval:0",
+          "target": "RewriteQuestion:WholeOwlsTurn",
           "targetHandle": "c",
-          "type": "buttonEdge"
+          "type": "buttonEdge",
+          "zIndex": 1001
         },
         {
-          "id": "reactflow__edge-generate:0d-answer:0a",
+          "id": "xy-edge__RewriteQuestion:WholeOwlsTurnb-Categorize:KhakiTimesSmilea",
           "markerEnd": "logo",
-          "source": "generate:0",
-          "sourceHandle": "d",
+          "source": "RewriteQuestion:WholeOwlsTurn",
+          "sourceHandle": "b",
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
-          "target": "answer:0",
+          "target": "Categorize:KhakiTimesSmile",
           "targetHandle": "a",
-          "type": "buttonEdge"
+          "type": "buttonEdge",
+          "zIndex": 1001
         },
         {
-          "id": "reactflow__edge-retrieval:0a-relevant:0b",
+          "id": "xy-edge__Answer:FlatGhostsCheatc-RewriteQuestion:WholeOwlsTurnc",
           "markerEnd": "logo",
-          "source": "retrieval:0",
-          "sourceHandle": "a",
+          "source": "Answer:FlatGhostsCheat",
+          "sourceHandle": "c",
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
-          "target": "relevant:0",
-          "targetHandle": "b",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-rewrite:0d-retrieval:0b",
-          "markerEnd": "logo",
-          "source": "rewrite:0",
-          "sourceHandle": "d",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "retrieval:0",
-          "targetHandle": "b",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-relevant:0no-rewrite:0a",
-          "markerEnd": "logo",
-          "source": "relevant:0",
-          "sourceHandle": "no",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "rewrite:0",
-          "targetHandle": "a",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-relevant:0yes-generate:0b",
-          "markerEnd": "logo",
-          "source": "relevant:0",
-          "sourceHandle": "yes",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "generate:0",
-          "targetHandle": "b",
-          "type": "buttonEdge"
+          "target": "RewriteQuestion:WholeOwlsTurn",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
         }
       ],
       "nodes": [
         {
           "data": {
             "form": {
-              "prologue": "Hi there!"
+              "prologue": "Hi friend! How things going?"
             },
             "label": "Begin",
             "name": "Opening"
           },
           "dragging": false,
-          "height": 50,
+          "height": 44,
           "id": "begin",
+          "measured": {
+            "height": 44,
+            "width": 100
+          },
           "position": {
-            "x": -304.50000000000006,
-            "y": -2.9994670375766646
+            "x": -1395.0793275834214,
+            "y": 245.9566071305116
           },
           "positionAbsolute": {
-            "x": -304.50000000000006,
-            "y": -2.9994670375766646
+            "x": -1128.7777718344705,
+            "y": 244.52466633336172
           },
           "selected": false,
           "sourcePosition": "left",
           "targetPosition": "right",
-          "type": "beginNode",
-          "width": 50
+          "type": "beginNode"
         },
         {
           "data": {
@@ -196,133 +1185,1124 @@
             "name": "Interface"
           },
           "dragging": false,
-          "height": 100,
+          "height": 44,
           "id": "answer:0",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
           "position": {
-            "x": -89.78929141627594,
-            "y": -29.530900170597448
+            "x": -1108.7963549433637,
+            "y": 245.49487573152214
           },
           "positionAbsolute": {
-            "x": -89.78929141627594,
-            "y": -29.530900170597448
+            "x": -888.7666192056412,
+            "y": 245.72423440610623
           },
           "selected": false,
           "sourcePosition": "left",
           "targetPosition": "right",
           "type": "logicNode",
-          "width": 100
+          "width": 200
         },
         {
           "data": {
             "form": {
-              "empty_response": "Sorry, knowledge base has noting related information.",
-              "kb_ids": [],
-              "keywords_similarity_weight": 0.3,
-              "rerank_id": "BAAI/bge-reranker-v2-m3",
-              "similarity_threshold": 0.2,
-              "top_k": 1024,
-              "top_n": 6
+              "query_type": "stock",
+              "top_n": 5
             },
-            "label": "Retrieval",
-            "name": "Search KB"
+            "label": "WenCai",
+            "name": "wencai"
           },
           "dragging": false,
-          "height": 100,
-          "id": "retrieval:0",
+          "height": 44,
+          "id": "WenCai:TenParksOpen",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
           "position": {
-            "x": 225.1100159655728,
-            "y": -28.569259485130402
+            "x": 12.42850532999941,
+            "y": -19.97501336317155
           },
           "positionAbsolute": {
-            "x": 225.1100159655728,
-            "y": -28.569259485130402
-          },
-          "selected": true,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 100
-        },
-        {
-          "data": {
-            "form": {
-              "llm_id": "deepseek-chat",
-              "no": "rewrite:0",
-              "temperature": 0.02,
-              "yes": "generate:0"
-            },
-            "label": "Relevant",
-            "name": "Relevant?"
-          },
-          "dragging": false,
-          "height": 70,
-          "id": "relevant:0",
-          "position": {
-            "x": 225.36494412049518,
-            "y": 307.7194989687223
-          },
-          "positionAbsolute": {
-            "x": 225.36494412049518,
-            "y": 307.7194989687223
+            "x": 15.623628641957595,
+            "y": 18.36646638032667
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "relevantNode",
-          "width": 70
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
         },
         {
           "data": {
             "form": {
-              "llm_id": "deepseek-chat",
-              "prompt": "You are an intelligent assistant. Please answer the question based on content of knowledge base. When all knowledge base content is irrelevant to the question, your answer must include the sentence \"The answer you are looking for is not found in the knowledge base!\". Answers need to consider chat history.\n      Knowledge base content is as following:\n      {input}\n      The above is the content of knowledge base.",
-              "temperature": 0.02
+              "query": [
+                {
+                  "component_id": "KeywordExtract:FineApesSmash",
+                  "type": "reference"
+                }
+              ],
+              "top_n": 10
+            },
+            "label": "AkShare",
+            "name": "akshare"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "AkShare:CalmHotelsKnow",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 286.23058063345974,
+            "y": 77.23621771568216
+          },
+          "positionAbsolute": {
+            "x": 287.37496746240566,
+            "y": 95.21451122612848
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "category_description": {
+                "1. weather": {
+                  "description": "Question is about weather.",
+                  "examples": "Will it rain tomorrow?\nIs it sunny next day?\nWhat is average temperature next week?",
+                  "to": "QWeather:DeepKiwisTeach"
+                },
+                "2. finance": {
+                  "description": "Question is about finance/economic information, stock market, economic news.",
+                  "examples": "Stocks have MACD buy signals？\nWhen is the next interest rate cut by the Federal Reserve?\n",
+                  "to": "Concentrator:TrueGeckosSlide"
+                },
+                "3. medical": {
+                  "description": "Question is about medical issue, health, illness or medicine etc,.",
+                  "examples": "How to relieve the headache?\nCan't sleep, what to do?\nWhat the effect of coffee in terms of losing weight?",
+                  "to": "Concentrator:DryTrainsSearch"
+                },
+                "4. other": {
+                  "description": "",
+                  "to": "KeywordExtract:PurpleApplesKnow"
+                },
+                "5. chitchatting": {
+                  "description": "Regarding the issues of small talk, companionship, sharing, and emotional intimacy.",
+                  "examples": "What's your name?\nWhat a bad day!\nTerrible day.\nHow are you today?",
+                  "to": "Generate:FiveDragonsLay"
+                }
+              },
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Categorize",
+            "name": "categorize"
+          },
+          "dragging": false,
+          "height": 257,
+          "id": "Categorize:KhakiTimesSmile",
+          "measured": {
+            "height": 257,
+            "width": 200
+          },
+          "position": {
+            "x": -609.8076141214767,
+            "y": 138.97995386409644
+          },
+          "positionAbsolute": {
+            "x": -609.8076141214767,
+            "y": 138.97995386409644
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "categorizeNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {},
+            "label": "Concentrator",
+            "name": "medical"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Concentrator:DryTrainsSearch",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": -297.50465849305726,
+            "y": 192.93248143666426
+          },
+          "positionAbsolute": {
+            "x": -297.50465849305726,
+            "y": 192.93248143666426
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "logicNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {},
+            "label": "Concentrator",
+            "name": "finance"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Concentrator:TrueGeckosSlide",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": -283.7257570286697,
+            "y": 39.53087026260538
+          },
+          "positionAbsolute": {
+            "x": -291.18104475657213,
+            "y": 104.49837760575514
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "logicNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "email": "xxx@sss.com",
+              "query": [
+                {
+                  "component_id": "Generate:TenderFlowersItch",
+                  "type": "reference"
+                }
+              ],
+              "top_n": 10
+            },
+            "label": "PubMed",
+            "name": "pubmed"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "PubMed:EasyQueensLose",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 284.0198843702174,
+            "y": 311.1165973927743
+          },
+          "positionAbsolute": {
+            "x": 289.34508989014773,
+            "y": 303.66130966487185
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "channel": "text",
+              "query": [
+                {
+                  "component_id": "KeywordExtract:PurpleApplesKnow",
+                  "type": "reference"
+                }
+              ],
+              "top_n": 10
+            },
+            "label": "DuckDuckGo",
+            "name": "duck"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "DuckDuckGo:NiceSeasInvent",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 7.657335234364808,
+            "y": 400.76450914063935
+          },
+          "positionAbsolute": {
+            "x": 7.657335234364808,
+            "y": 400.76450914063935
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "query": [
+                {
+                  "component_id": "KeywordExtract:PurpleApplesKnow",
+                  "type": "reference"
+                }
+              ],
+              "top_n": 10
+            },
+            "label": "Baidu",
+            "name": "baidu"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Baidu:CleanJarsMake",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 8.171790651147376,
+            "y": 474.40274063759057
+          },
+          "positionAbsolute": {
+            "x": 4.976667339189191,
+            "y": 470.1425762216463
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "language": "en",
+              "query": [
+                {
+                  "component_id": "KeywordExtract:PurpleApplesKnow",
+                  "type": "reference"
+                }
+              ],
+              "top_n": 10
+            },
+            "label": "Wikipedia",
+            "name": "wikipedia"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Wikipedia:ThinLampsTravel",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 9.052450060063862,
+            "y": 552.7249071032869
+          },
+          "positionAbsolute": {
+            "x": 7.415215541604823,
+            "y": 528.2289617116074
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "lang": "en",
+              "time_period": "7d",
+              "type": "weather",
+              "user_type": "free",
+              "web_apikey": "947e8994bc5f488f8857d618ebac1b19"
+            },
+            "label": "QWeather",
+            "name": "weather"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "QWeather:DeepKiwisTeach",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": -279.9836447763803,
+            "y": -82.71505095397171
+          },
+          "positionAbsolute": {
+            "x": -298.10498664044485,
+            "y": -82.71505095397171
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "ragNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {},
+            "label": "Answer",
+            "name": "interact1"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Answer:FlatGhostsCheat",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": -270.33248490121287,
+            "y": 829.1217635254768
+          },
+          "positionAbsolute": {
+            "x": -270.33248490121287,
+            "y": 829.1217635254768
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "logicNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_n": 3,
+              "top_p": 0.3
+            },
+            "label": "KeywordExtract",
+            "name": "websearch"
+          },
+          "dragging": false,
+          "height": 86,
+          "id": "KeywordExtract:PurpleApplesKnow",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
+          "position": {
+            "x": -298.5102848627008,
+            "y": 317.00405006716994
+          },
+          "positionAbsolute": {
+            "x": -303.2049394929516,
+            "y": 320.75977377137053
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "keywordNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "cite": false,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role:  You‘re warm-hearted lovely young girl, 22 years old, located at Shanghai in China. Your name is R. Who are talking to you is your very good old friend of yours.\n\nTask: \n- Chat with the friend.\n- Ask question and care about them.\n- Provide useful advice to your friend.\n- Tell jokes to make  your friend happy.\n",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
             },
             "label": "Generate",
-            "name": "LLM"
+            "name": "smalltalk"
           },
           "dragging": false,
-          "height": 150,
-          "id": "generate:0",
+          "height": 86,
+          "id": "Generate:FiveDragonsLay",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
           "position": {
-            "x": -90.09669656497177,
-            "y": 192.12280240375043
+            "x": -303.2049394929516,
+            "y": 460.205697890327
           },
           "positionAbsolute": {
-            "x": -90.09669656497177,
-            "y": 192.12280240375043
+            "x": -303.2049394929516,
+            "y": 460.205697890327
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 150
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode",
+          "width": 200
         },
         {
           "data": {
             "form": {
-              "llm_id": "deepseek-chat",
-              "temperature": 0.8
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "query": [
+                {
+                  "component_id": "answer:0",
+                  "type": "reference"
+                }
+              ],
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_n": 2,
+              "top_p": 0.3
             },
-            "label": "RewriteQuestion",
-            "name": "Refine Ques"
+            "label": "KeywordExtract",
+            "name": "keywords"
           },
           "dragging": false,
-          "height": 70,
-          "id": "rewrite:0",
+          "height": 86,
+          "id": "KeywordExtract:FineApesSmash",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
           "position": {
-            "x": 416.0628662660416,
-            "y": 144.09722952739514
+            "x": 11.932933139796546,
+            "y": 57.173040113879324
           },
           "positionAbsolute": {
-            "x": 416.0628662660416,
-            "y": 144.09722952739514
+            "x": 14.063015347768669,
+            "y": 76.34377998562843
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 70
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "keywordNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "cite": false,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are a professional medical consulting translation assistant\n\nTask: Translate user questions into Chinese, ensuring accuracy of medical terminology and appropriateness of context.\n\nRequirements:\n- Accurately translate medical terminology to convey the integrity and emotional color of the original message.\n- For unclear or uncertain medical terminology, the original text may be retained to ensure accuracy.\n- Respect the privacy and sensitivity of medical consultations and ensure that sensitive information is not disclosed during the translation process.\n- If the user's question is in Chinese, there is no need to translate, just output the user's question directly\n\nExample:\nOriginal (English): Doctor, I have been suffering from chest pain and shortness of breath for the past few days.\nTranslation (Chinese): 医生，我这几天一直胸痛和气短。\n\nNote:\nOnly the translated content needs to be output, no other irrelevant content!",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "translate to Chinese"
+          },
+          "dragging": false,
+          "height": 86,
+          "id": "Generate:OddInsectsRaise",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
+          "position": {
+            "x": 8.505454221830348,
+            "y": 176.7452480823864
+          },
+          "positionAbsolute": {
+            "x": 12.765618637774594,
+            "y": 178.87533029035853
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "cite": false,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are a professional medical consulting translation assistant\n\nTask: Translate user questions into English, ensuring accuracy of medical terminology and appropriateness of context.\n\nRequirements:\n- Accurately translate medical terminology to convey the integrity and emotional color of the original message.\n- For unclear or uncertain medical terminology, the original text may be retained to ensure accuracy.\n- Respect the privacy and sensitivity of medical consultations and ensure that sensitive information is not disclosed during the translation process.\n- If the user's question is in Chinese, there is no need to translate, just output the user's question directly\n\nExample:\nOriginal (Chinese): 医生，我这几天一直胸痛和气短。\nTranslation (English): Doctor, I have been suffering from chest pain and shortness of breath for the past few days.\n\nNote:\nOnly the translated content needs to be output, no other irrelevant content!",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "translate to English"
+          },
+          "dragging": false,
+          "height": 86,
+          "id": "Generate:TenderFlowersItch",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
+          "position": {
+            "x": 6.4217969708194005,
+            "y": 289.41241706707075
+          },
+          "positionAbsolute": {
+            "x": 9.616920282777585,
+            "y": 286.21729375511256
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "kb_ids": [],
+              "keywords_similarity_weight": 0.3,
+              "query": [
+                {
+                  "component_id": "Generate:OddInsectsRaise",
+                  "type": "reference"
+                }
+              ],
+              "similarity_threshold": 0.2,
+              "top_n": 8
+            },
+            "label": "Retrieval",
+            "name": "medical Q&A"
+          },
+          "dragging": false,
+          "height": 44,
+          "id": "Retrieval:LemonGeckosHear",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
+          "position": {
+            "x": 285.6757005660011,
+            "y": 197.46859232883952
+          },
+          "positionAbsolute": {
+            "x": 285.6757005660011,
+            "y": 197.46859232883952
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "retrievalNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Use QWeather to lookup weather."
+            },
+            "label": "Note",
+            "name": "N: weather"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:SilverDotsExist",
+          "measured": {
+            "height": 128,
+            "width": 201
+          },
+          "position": {
+            "x": -298.19983400974513,
+            "y": -223.95614896125952
+          },
+          "positionAbsolute": {
+            "x": -298.19983400974513,
+            "y": -223.95614896125952
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 128,
+            "width": 201
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 201
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Receives the user's first input."
+            },
+            "label": "Note",
+            "name": "N: Interface"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 129,
+          "id": "Note:SixApplesBuy",
+          "measured": {
+            "height": 129,
+            "width": 206
+          },
+          "position": {
+            "x": -1110.7442068670325,
+            "y": 109.04326530391003
+          },
+          "positionAbsolute": {
+            "x": -891.375632399789,
+            "y": 104.17908459859171
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 129,
+            "width": 206
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 206
+        },
+        {
+          "data": {
+            "form": {
+              "text": "The large model determines which category the user's input belongs to and passes it to different components.\n\nIt categorizes user's question into 5 kinds of requirements."
+            },
+            "label": "Note",
+            "name": "N: categorize"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:WeakSquidsSell",
+          "measured": {
+            "height": 128,
+            "width": 269
+          },
+          "position": {
+            "x": -611.6360243646881,
+            "y": 2.5943909323361254
+          },
+          "positionAbsolute": {
+            "x": -611.6360243646881,
+            "y": 2.5943909323361254
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 269
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Receives the user's subsequent inputs and displays the large model's response to the user's query."
+            },
+            "label": "Note",
+            "name": "N: Interact1"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:NastyPlanetsBet",
+          "measured": {
+            "height": 128,
+            "width": 381
+          },
+          "position": {
+            "x": -267.26820114571024,
+            "y": 895.5661251048839
+          },
+          "positionAbsolute": {
+            "x": -267.26820114571024,
+            "y": 895.5661251048839
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 128,
+            "width": 381
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 381
+        },
+        {
+          "data": {
+            "form": {
+              "text": "This part is for web search."
+            },
+            "label": "Note",
+            "name": "N: duck & baidu & wikipedia"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:AngryCloudsHear",
+          "measured": {
+            "height": 128,
+            "width": 269
+          },
+          "position": {
+            "x": 18.438312365018305,
+            "y": 629.5305133234383
+          },
+          "positionAbsolute": {
+            "x": 9.917983533129814,
+            "y": 597.5792802038565
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 269
+        },
+        {
+          "data": {
+            "form": {
+              "text": "This part is for medial/health issue.\nCheck out this dateset for 'Med Q&A'.\nhttps://huggingface.co/datasets/InfiniFlow/medical_QA"
+            },
+            "label": "Note",
+            "name": "N: medGen"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:CommonWingsProve",
+          "measured": {
+            "height": 128,
+            "width": 425
+          },
+          "position": {
+            "x": 667.6086950648928,
+            "y": 320.04639793250567
+          },
+          "positionAbsolute": {
+            "x": 667.6086950648928,
+            "y": 320.04639793250567
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 128,
+            "width": 425
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 425
+        },
+        {
+          "data": {
+            "form": {
+              "text": "This part is for fiance/economic questions."
+            },
+            "label": "Note",
+            "name": "N: financeGen"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:WickedRocksMatter",
+          "measured": {
+            "height": 128,
+            "width": 208
+          },
+          "position": {
+            "x": 806.2393068252843,
+            "y": 135.72131770444153
+          },
+          "positionAbsolute": {
+            "x": 806.2393068252843,
+            "y": 135.72131770444153
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 128,
+            "width": 208
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 208
+        },
+        {
+          "data": {
+            "form": {
+              "text": "This part is for weather consulting."
+            },
+            "label": "Note",
+            "name": "N: weatherGen"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:FiftyWebsReport",
+          "measured": {
+            "height": 128,
+            "width": 269
+          },
+          "position": {
+            "x": 988.0143050238387,
+            "y": -266.8179039129136
+          },
+          "positionAbsolute": {
+            "x": 1104.5947767935495,
+            "y": 17.63844720518125
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 269
+        },
+        {
+          "data": {
+            "form": {
+              "cite": true,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": false,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are an intelligent assistant. \nTask: Chat with user. Answer the question based on the provided content from: Knowledge Base, Wikipedia, Duckduckgo, Baidu.\nRequirements:\n  - Answer should be in markdown format.\n - Answer should include all sources(Knowledge Base, Wikipedia, Duckduckgo, Baidu) as long as they are relevant, and label the sources of the cited content separately.\n  - Attach URL links to the content which is quoted from Wikipedia, DuckDuckGo or Baidu.\n  - Do not make thing up when there's no relevant information to user's question. \n\n## Wikipedia content\n{Wikipedia:ThinLampsTravel}\n\n\n## Duckduckgo content\n{DuckDuckGo:NiceSeasInvent}\n\n\n## Baidu content\n{Baidu:CleanJarsMake}\n\n",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "websearchGen"
+          },
+          "dragging": false,
+          "id": "Generate:FunnyHandsTickle",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": 282.8614392540758,
+            "y": 444.05759231978817
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode"
+        },
+        {
+          "data": {
+            "form": {
+              "cite": true,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": false,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are a professional medical consulting assistant.\n\nTasks: Answer questions posed by users. Answer based on content provided by the knowledge base, PubMed\n\nRequirement:\n- Answers may refer to the content provided (Knowledge Base, PubMed).\n- If the provided PubMed content is referenced, a link to the corresponding URL should be given.\n-Answers should be professional and accurate; no information should be fabricated that is not relevant to the user's question.\n\nProvided knowledge base content as following:\n{Retrieval:LemonGeckosHear}\n\nPubMed content provided\n{PubMed:EasyQueensLose}\n\n\n\n",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "medGen"
+          },
+          "dragging": false,
+          "id": "Generate:LazyClubsAttack",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": 554.9441185731348,
+            "y": 166.42747693602357
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode"
+        },
+        {
+          "data": {
+            "form": {
+              "cite": true,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": false,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are a professional financial counseling assistant.\n\nTask: Answer user's question based on content provided by Wencai and AkShare.\n\nNotice:\n- Output no more than 5 news items from AkShare if there's content provided by Wencai.\n- Items from AkShare MUST have a corresponding URL link.\n\n############\nContent provided by Wencai: \n{WenCai:TenParksOpen}\n\n################\nContent provided by AkShare: \n{AkShare:CalmHotelsKnow}\n\n",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "financeGen"
+          },
+          "dragging": false,
+          "id": "Generate:RealFansObey",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": 766.2368307106321,
+            "y": -51.15593613458973
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode"
+        },
+        {
+          "data": {
+            "form": {
+              "cite": false,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 0,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role:  You‘re warm-hearted lovely young girl, 22 years old, located at Shanghai in China. Your name is R. Who are talking to you is your very good old friend of yours.\n\nTask: \n- Chat with the friend.\n- Ask question and care about them.\n- Tell your friend the weather if there's weather information provided. If your friend did not provide region information, ask about where he/she is.\n\nThe following is the weather information:\n{QWeather:DeepKiwisTeach}\n\n\n",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "weatherGen"
+          },
+          "dragging": false,
+          "id": "Generate:KhakiCrabsGlow",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": 996.5291688522603,
+            "y": -114.01530807109054
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode"
+        },
+        {
+          "data": {
+            "form": {
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 6,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "RewriteQuestion",
+            "name": "RefineQuestion"
+          },
+          "dragging": false,
+          "id": "RewriteQuestion:WholeOwlsTurn",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": -859.3797967550868,
+            "y": 214.54444107648857
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "rewriteNode"
         }
       ]
     },

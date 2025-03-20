@@ -1,3 +1,6 @@
+#
+#  Copyright 2025 The InfiniFlow Authors. All Rights Reserved.
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
@@ -11,6 +14,7 @@
 #  limitations under the License.
 #
 
+import logging
 import os
 import PIL
 from PIL import ImageDraw
@@ -24,7 +28,7 @@ def save_results(image_list, results, labels, output_dir='output/', threshold=0.
 
         out_path = os.path.join(output_dir, f"{idx}.jpg")
         im.save(out_path, quality=95)
-        print("save result to: " + out_path)
+        logging.debug("save result to: " + out_path)
 
 
 def draw_box(im, result, lables, threshold=0.5):

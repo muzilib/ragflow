@@ -1,10 +1,11 @@
 import { Authorization } from '@/constants/authorization';
 import userService from '@/services/user-service';
-import authorizationUtil from '@/utils/authorization-util';
+import authorizationUtil, { redirectToLogin } from '@/utils/authorization-util';
 import { useMutation } from '@tanstack/react-query';
-import { message } from 'antd';
+import { Form, message } from 'antd';
+import { FormInstance } from 'antd/lib';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { history } from 'umi';
 
 export interface ILoginRequestBody {
   email: string;
@@ -26,7 +27,7 @@ export const useLogin = () => {
     mutationKey: ['login'],
     mutationFn: async (params: { email: string; password: string }) => {
       const { data: res = {}, response } = await userService.login(params);
-      if (res.retcode === 0) {
+      if (res.code === 0) {
         const { data } = res;
         message.success(t('message.logged'));
         const authorization = response.headers.get(Authorization);
@@ -42,7 +43,7 @@ export const useLogin = () => {
           Token: token,
         });
       }
-      return res.retcode;
+      return res.code;
     },
   });
 
@@ -64,10 +65,10 @@ export const useRegister = () => {
       nickname: string;
     }) => {
       const { data = {} } = await userService.register(params);
-      if (data.retcode === 0) {
+      if (data.code === 0) {
         message.success(t('message.registered'));
       }
-      return data.retcode;
+      return data.code;
     },
   });
 
@@ -84,14 +85,30 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: async () => {
       const { data = {} } = await userService.logout();
-      if (data.retcode === 0) {
+      if (data.code === 0) {
         message.success(t('message.logout'));
         authorizationUtil.removeAll();
-        history.push('/login');
+        redirectToLogin();
       }
-      return data.retcode;
+      return data.code;
     },
   });
 
   return { data, loading, logout: mutateAsync };
+};
+
+export const useHandleSubmittable = (form: FormInstance) => {
+  const [submittable, setSubmittable] = useState<boolean>(false);
+
+  // Watch all values
+  const values = Form.useWatch([], form);
+
+  useEffect(() => {
+    form
+      .validateFields({ validateOnly: true })
+      .then(() => setSubmittable(true))
+      .catch(() => setSubmittable(false));
+  }, [form, values]);
+
+  return { submittable };
 };

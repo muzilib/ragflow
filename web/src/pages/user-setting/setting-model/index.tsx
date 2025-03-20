@@ -1,14 +1,12 @@
 import { ReactComponent as MoreModelIcon } from '@/assets/svg/more-model.svg';
-import SvgIcon from '@/components/svg-icon';
+import { LlmIcon } from '@/components/svg-icon';
+import { useTheme } from '@/components/theme-provider';
+import { LLMFactory } from '@/constants/llm';
 import { useSetModalState, useTranslate } from '@/hooks/common-hooks';
 import { LlmItem, useSelectLlmList } from '@/hooks/llm-hooks';
+import { getRealModelName } from '@/utils/llm-util';
+import { CloseCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import {
-  CloseCircleOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  Avatar,
   Button,
   Card,
   Col,
@@ -29,13 +27,15 @@ import SettingTitle from '../components/setting-title';
 import { isLocalLlmFactory } from '../utils';
 import TencentCloudModal from './Tencent-modal';
 import ApiKeyModal from './api-key-modal';
+import AzureOpenAIModal from './azure-openai-modal';
 import BedrockModal from './bedrock-modal';
-import { IconMap } from './constant';
 import FishAudioModal from './fish-audio-modal';
 import GoogleModal from './google-modal';
 import {
+  useHandleDeleteFactory,
   useHandleDeleteLlm,
   useSubmitApiKey,
+  useSubmitAzure,
   useSubmitBedrock,
   useSubmitFishAudio,
   useSubmitGoogle,
@@ -55,16 +55,6 @@ import SystemModelSettingModal from './system-model-setting-modal';
 import VolcEngineModal from './volcengine-modal';
 import YiyanModal from './yiyan-modal';
 
-const LlmIcon = ({ name }: { name: string }) => {
-  const icon = IconMap[name as keyof typeof IconMap];
-
-  return icon ? (
-    <SvgIcon name={`llm/${icon}`} width={48} height={48}></SvgIcon>
-  ) : (
-    <Avatar shape="square" size="large" icon={<UserOutlined />} />
-  );
-};
-
 const { Text } = Typography;
 interface IModelCardProps {
   item: LlmItem;
@@ -74,7 +64,9 @@ interface IModelCardProps {
 const ModelCard = ({ item, clickApiKey }: IModelCardProps) => {
   const { visible, switchVisible } = useSetModalState();
   const { t } = useTranslate('setting');
+  const { theme } = useTheme();
   const { handleDeleteLlm } = useHandleDeleteLlm(item.name);
+  const { handleDeleteFactory } = useHandleDeleteFactory(item.name);
 
   const handleApiKeyClick = () => {
     clickApiKey(item.name);
@@ -86,7 +78,9 @@ const ModelCard = ({ item, clickApiKey }: IModelCardProps) => {
 
   return (
     <List.Item>
-      <Card className={styles.addedCard}>
+      <Card
+        className={theme === 'dark' ? styles.addedCardDark : styles.addedCard}
+      >
         <Row align={'middle'}>
           <Col span={12}>
             <Flex gap={'middle'} align="center">
@@ -100,22 +94,30 @@ const ModelCard = ({ item, clickApiKey }: IModelCardProps) => {
           <Col span={12} className={styles.factoryOperationWrapper}>
             <Space size={'middle'}>
               <Button onClick={handleApiKeyClick}>
-                {isLocalLlmFactory(item.name) ||
-                item.name === 'VolcEngine' ||
-                item.name === 'Tencent Hunyuan' ||
-                item.name === 'XunFei Spark' ||
-                item.name === 'BaiduYiyan' ||
-                item.name === 'Fish Audio' ||
-                item.name === 'Tencent Cloud' ||
-                item.name === 'Google Cloud'
-                  ? t('addTheModel')
-                  : 'API-Key'}
-                <SettingOutlined />
+                <Flex align="center" gap={4}>
+                  {isLocalLlmFactory(item.name) ||
+                  item.name === LLMFactory.VolcEngine ||
+                  item.name === LLMFactory.TencentHunYuan ||
+                  item.name === LLMFactory.XunFeiSpark ||
+                  item.name === LLMFactory.BaiduYiYan ||
+                  item.name === LLMFactory.FishAudio ||
+                  item.name === LLMFactory.TencentCloud ||
+                  item.name === LLMFactory.GoogleCloud ||
+                  item.name === LLMFactory.AzureOpenAI
+                    ? t('addTheModel')
+                    : 'API-Key'}
+                  <SettingOutlined />
+                </Flex>
               </Button>
               <Button onClick={handleShowMoreClick}>
-                <Flex gap={'small'}>
+                <Flex align="center" gap={4}>
                   {t('showMoreModels')}
                   <MoreModelIcon />
+                </Flex>
+              </Button>
+              <Button type={'text'} onClick={handleDeleteFactory}>
+                <Flex align="center">
+                  <CloseCircleOutlined style={{ color: '#D92D20' }} />
                 </Flex>
               </Button>
             </Space>
@@ -129,7 +131,8 @@ const ModelCard = ({ item, clickApiKey }: IModelCardProps) => {
             renderItem={(item) => (
               <List.Item>
                 <Space>
-                  {item.name} <Tag color="#b8b8b8">{item.type}</Tag>
+                  {getRealModelName(item.name)}
+                  <Tag color="#b8b8b8">{item.type}</Tag>
                   <Tooltip title={t('delete', { keyPrefix: 'common' })}>
                     <Button type={'text'} onClick={handleDeleteLlm(item.name)}>
                       <CloseCircleOutlined style={{ color: '#D92D20' }} />
@@ -147,6 +150,7 @@ const ModelCard = ({ item, clickApiKey }: IModelCardProps) => {
 
 const UserSettingModel = () => {
   const { factoryList, myLlmList: llmList, loading } = useSelectLlmList();
+  const { theme } = useTheme();
   const {
     saveApiKeyLoading,
     initialApiKey,
@@ -237,16 +241,25 @@ const UserSettingModel = () => {
     showBedrockAddingModal,
   } = useSubmitBedrock();
 
+  const {
+    AzureAddingVisible,
+    hideAzureAddingModal,
+    showAzureAddingModal,
+    onAzureAddingOk,
+    AzureAddingLoading,
+  } = useSubmitAzure();
+
   const ModalMap = useMemo(
     () => ({
-      Bedrock: showBedrockAddingModal,
-      VolcEngine: showVolcAddingModal,
-      'Tencent Hunyuan': showHunyuanAddingModal,
-      'XunFei Spark': showSparkAddingModal,
-      BaiduYiyan: showyiyanAddingModal,
-      'Fish Audio': showFishAudioAddingModal,
-      'Tencent Cloud': showTencentCloudAddingModal,
-      'Google Cloud': showGoogleAddingModal,
+      [LLMFactory.Bedrock]: showBedrockAddingModal,
+      [LLMFactory.VolcEngine]: showVolcAddingModal,
+      [LLMFactory.TencentHunYuan]: showHunyuanAddingModal,
+      [LLMFactory.XunFeiSpark]: showSparkAddingModal,
+      [LLMFactory.BaiduYiYan]: showyiyanAddingModal,
+      [LLMFactory.FishAudio]: showFishAudioAddingModal,
+      [LLMFactory.TencentCloud]: showTencentCloudAddingModal,
+      [LLMFactory.GoogleCloud]: showGoogleAddingModal,
+      [LLMFactory.AzureOpenAI]: showAzureAddingModal,
     }),
     [
       showBedrockAddingModal,
@@ -257,6 +270,7 @@ const UserSettingModel = () => {
       showyiyanAddingModal,
       showFishAudioAddingModal,
       showGoogleAddingModal,
+      showAzureAddingModal,
     ],
   );
 
@@ -311,9 +325,15 @@ const UserSettingModel = () => {
           dataSource={factoryList}
           renderItem={(item) => (
             <List.Item>
-              <Card className={styles.toBeAddedCard}>
+              <Card
+                className={
+                  theme === 'dark'
+                    ? styles.toBeAddedCardDark
+                    : styles.toBeAddedCard
+                }
+              >
                 <Flex vertical gap={'middle'}>
-                  <LlmIcon name={item.name} />
+                  <LlmIcon name={item.name} imgClass="h-12 w-auto" />
                   <Flex vertical gap={'middle'}>
                     <b>
                       <Text ellipsis={{ tooltip: item.name }}>{item.name}</Text>
@@ -379,57 +399,64 @@ const UserSettingModel = () => {
         hideModal={hideVolcAddingModal}
         onOk={onVolcAddingOk}
         loading={volcAddingLoading}
-        llmFactory={'VolcEngine'}
+        llmFactory={LLMFactory.VolcEngine}
       ></VolcEngineModal>
       <HunyuanModal
         visible={HunyuanAddingVisible}
         hideModal={hideHunyuanAddingModal}
         onOk={onHunyuanAddingOk}
         loading={HunyuanAddingLoading}
-        llmFactory={'Tencent Hunyuan'}
+        llmFactory={LLMFactory.TencentHunYuan}
       ></HunyuanModal>
       <GoogleModal
         visible={GoogleAddingVisible}
         hideModal={hideGoogleAddingModal}
         onOk={onGoogleAddingOk}
         loading={GoogleAddingLoading}
-        llmFactory={'Google Cloud'}
+        llmFactory={LLMFactory.GoogleCloud}
       ></GoogleModal>
       <TencentCloudModal
         visible={TencentCloudAddingVisible}
         hideModal={hideTencentCloudAddingModal}
         onOk={onTencentCloudAddingOk}
         loading={TencentCloudAddingLoading}
-        llmFactory={'Tencent TencentCloud'}
+        llmFactory={LLMFactory.TencentCloud}
       ></TencentCloudModal>
       <SparkModal
         visible={SparkAddingVisible}
         hideModal={hideSparkAddingModal}
         onOk={onSparkAddingOk}
         loading={SparkAddingLoading}
-        llmFactory={'XunFei Spark'}
+        llmFactory={LLMFactory.XunFeiSpark}
       ></SparkModal>
       <YiyanModal
         visible={yiyanAddingVisible}
         hideModal={hideyiyanAddingModal}
         onOk={onyiyanAddingOk}
         loading={yiyanAddingLoading}
-        llmFactory={'BaiduYiyan'}
+        llmFactory={LLMFactory.BaiduYiYan}
       ></YiyanModal>
       <FishAudioModal
         visible={FishAudioAddingVisible}
         hideModal={hideFishAudioAddingModal}
         onOk={onFishAudioAddingOk}
         loading={FishAudioAddingLoading}
-        llmFactory={'Fish Audio'}
+        llmFactory={LLMFactory.FishAudio}
       ></FishAudioModal>
       <BedrockModal
         visible={bedrockAddingVisible}
         hideModal={hideBedrockAddingModal}
         onOk={onBedrockAddingOk}
         loading={bedrockAddingLoading}
-        llmFactory={'Bedrock'}
+        llmFactory={LLMFactory.Bedrock}
       ></BedrockModal>
+      <AzureOpenAIModal
+        visible={AzureAddingVisible}
+        hideModal={hideAzureAddingModal}
+        onOk={onAzureAddingOk}
+        loading={AzureAddingLoading}
+        llmFactory={LLMFactory.AzureOpenAI}
+      ></AzureOpenAIModal>
     </section>
   );
 };

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+#
+#  Copyright 2025 The InfiniFlow Authors. All Rights Reserved.
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
@@ -11,15 +14,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+
 from rag.nlp import find_codec
 import readability
 import html_text
 import chardet
 
+
 def get_encoding(file):
     with open(file,'rb') as f:
         tmp = chardet.detect(f.read())
         return tmp['encoding']
+
 
 class RAGFlowHtmlParser:
     def __call__(self, fnm, binary=None):
@@ -34,7 +40,7 @@ class RAGFlowHtmlParser:
 
     @classmethod
     def parser_txt(cls, txt):
-        if type(txt) != str:
+        if not isinstance(txt, str):
             raise TypeError("txt type should be str!")
         html_doc = readability.Document(txt)
         title = html_doc.title()

@@ -1,3 +1,6 @@
+#
+#  Copyright 2025 The InfiniFlow Authors. All Rights Reserved.
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
@@ -11,6 +14,7 @@
 #  limitations under the License.
 #
 
+import logging
 from email import policy
 from email.parser import BytesParser
 from rag.app.naive import chunk as naive_chunk
@@ -18,7 +22,6 @@ import re
 from rag.nlp import rag_tokenizer, naive_merge, tokenize_chunks
 from deepdoc.parser import HtmlParser, TxtParser
 from timeit import default_timer as timer
-from rag.settings import cron_logger
 import io
 
 
@@ -37,7 +40,7 @@ def chunk(
     eng = lang.lower() == "english"  # is_english(cks)
     parser_config = kwargs.get(
         "parser_config",
-        {"chunk_token_num": 128, "delimiter": "\n!?。；！？", "layout_recognize": True},
+        {"chunk_token_num": 128, "delimiter": "\n!?。；！？", "layout_recognize": "DeepDOC"},
     )
     doc = {
         "docnm_kwd": filename,
@@ -75,7 +78,7 @@ def chunk(
     _add_content(msg, msg.get_content_type())
 
     sections = TxtParser.parser_txt("\n".join(text_txt)) + [
-        (l, "") for l in HtmlParser.parser_txt("\n".join(html_txt)) if l
+        (line, "") for line in HtmlParser.parser_txt("\n".join(html_txt)) if line
     ]
 
     st = timer()
@@ -86,7 +89,7 @@ def chunk(
     )
 
     main_res.extend(tokenize_chunks(chunks, doc, eng, None))
-    cron_logger.info("naive_merge({}): {}".format(filename, timer() - st))
+    logging.debug("naive_merge({}): {}".format(filename, timer() - st))
     # get the attachment info
     for part in msg.iter_attachments():
         content_disposition = part.get("Content-Disposition")

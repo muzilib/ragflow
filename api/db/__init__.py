@@ -27,6 +27,7 @@ class UserTenantRole(StrEnum):
     OWNER = 'owner'
     ADMIN = 'admin'
     NORMAL = 'normal'
+    INVITE = 'invite'
 
 
 class TenantPermission(StrEnum):
@@ -88,6 +89,7 @@ class ParserType(StrEnum):
     AUDIO = "audio"
     EMAIL = "email"
     KG = "knowledge_graph"
+    TAG = "tag"
 
 
 class FileSource(StrEnum):

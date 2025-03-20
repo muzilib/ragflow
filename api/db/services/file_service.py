@@ -13,8 +13,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+import logging
 import re
 import os
+from concurrent.futures import ThreadPoolExecutor
+
 from flask_login import current_user
 from peewee import fn
 
@@ -26,17 +29,29 @@ from api.db.services.common_service import CommonService
 from api.db.services.document_service import DocumentService
 from api.db.services.file2document_service import File2DocumentService
 from api.utils import get_uuid
-from api.utils.file_utils import filename_type, thumbnail
+from api.utils.file_utils import filename_type, thumbnail_img
 from rag.utils.storage_factory import STORAGE_IMPL
 
 
 class FileService(CommonService):
+    # Service class for managing file operations and storage
     model = File
 
     @classmethod
     @DB.connection_context()
     def get_by_pf_id(cls, tenant_id, pf_id, page_number, items_per_page,
                      orderby, desc, keywords):
+        # Get files by parent folder ID with pagination and filtering
+        # Args:
+        #     tenant_id: ID of the tenant
+        #     pf_id: Parent folder ID
+        #     page_number: Page number for pagination
+        #     items_per_page: Number of items per page
+        #     orderby: Field to order by
+        #     desc: Boolean indicating descending order
+        #     keywords: Search keywords
+        # Returns:
+        #     Tuple of (file_list, total_count)
         if keywords:
             files = cls.model.select().where(
                 (cls.model.tenant_id == tenant_id),
@@ -77,12 +92,18 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_kb_id_by_file_id(cls, file_id):
+        # Get knowledge base IDs associated with a file
+        # Args:
+        #     file_id: File ID
+        # Returns:
+        #     List of dictionaries containing knowledge base IDs and names
         kbs = (cls.model.select(*[Knowledgebase.id, Knowledgebase.name])
                .join(File2Document, on=(File2Document.file_id == file_id))
                .join(Document, on=(File2Document.document_id == Document.id))
                .join(Knowledgebase, on=(Knowledgebase.id == Document.kb_id))
                .where(cls.model.id == file_id))
-        if not kbs: return []
+        if not kbs:
+            return []
         kbs_info_list = []
         for kb in list(kbs.dicts()):
             kbs_info_list.append({"kb_id": kb['id'], "kb_name": kb['name']})
@@ -91,6 +112,12 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_by_pf_id_name(cls, id, name):
+        # Get file by parent folder ID and name
+        # Args:
+        #     id: Parent folder ID
+        #     name: File name
+        # Returns:
+        #     File object or None if not found
         file = cls.model.select().where((cls.model.parent_id == id) & (cls.model.name == name))
         if file.count():
             e, file = cls.get_by_id(file[0].id)
@@ -102,6 +129,14 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_id_list_by_id(cls, id, name, count, res):
+        # Recursively get list of file IDs by traversing folder structure
+        # Args:
+        #     id: Starting folder ID
+        #     name: List of folder names to traverse
+        #     count: Current depth in traversal
+        #     res: List to store results
+        # Returns:
+        #     List of file IDs
         if count < len(name):
             file = cls.get_by_pf_id_name(id, name[count])
             if file:
@@ -115,6 +150,12 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_all_innermost_file_ids(cls, folder_id, result_ids):
+        # Get IDs of all files in the deepest level of folders
+        # Args:
+        #     folder_id: Starting folder ID
+        #     result_ids: List to store results
+        # Returns:
+        #     List of file IDs
         subfolders = cls.model.select().where(cls.model.parent_id == folder_id)
         if subfolders.exists():
             for subfolder in subfolders:
@@ -126,6 +167,14 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def create_folder(cls, file, parent_id, name, count):
+        # Recursively create folder structure
+        # Args:
+        #     file: Current file object
+        #     parent_id: Parent folder ID
+        #     name: List of folder names to create
+        #     count: Current depth in creation
+        # Returns:
+        #     Created file object
         if count > len(name) - 2:
             return file
         else:
@@ -144,6 +193,11 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def is_parent_folder_exist(cls, parent_id):
+        # Check if parent folder exists
+        # Args:
+        #     parent_id: Parent folder ID
+        # Returns:
+        #     Boolean indicating if folder exists
         parent_files = cls.model.select().where(cls.model.id == parent_id)
         if parent_files.count():
             return True
@@ -153,6 +207,11 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_root_folder(cls, tenant_id):
+        # Get or create root folder for tenant
+        # Args:
+        #     tenant_id: Tenant ID
+        # Returns:
+        #     Root folder dictionary
         for file in cls.model.select().where((cls.model.tenant_id == tenant_id),
                                         (cls.model.parent_id == cls.model.id)
                                         ):
@@ -175,6 +234,11 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_kb_folder(cls, tenant_id):
+        # Get knowledge base folder for tenant
+        # Args:
+        #     tenant_id: Tenant ID
+        # Returns:
+        #     Knowledge base folder dictionary
         for root in cls.model.select().where(
                 (cls.model.tenant_id == tenant_id), (cls.model.parent_id == cls.model.id)):
             for folder in cls.model.select().where(
@@ -186,6 +250,16 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def new_a_file_from_kb(cls, tenant_id, name, parent_id, ty=FileType.FOLDER.value, size=0, location=""):
+        # Create a new file from knowledge base
+        # Args:
+        #     tenant_id: Tenant ID
+        #     name: File name
+        #     parent_id: Parent folder ID
+        #     ty: File type
+        #     size: File size
+        #     location: File location
+        # Returns:
+        #     Created file dictionary
         for file in cls.query(tenant_id=tenant_id, parent_id=parent_id, name=name):
             return file.to_dict()
         file = {
@@ -205,6 +279,10 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def init_knowledgebase_docs(cls, root_id, tenant_id):
+        # Initialize knowledge base documents
+        # Args:
+        #     root_id: Root folder ID
+        #     tenant_id: Tenant ID
         for _ in cls.model.select().where((cls.model.name == KNOWLEDGEBASE_FOLDER_NAME)\
                                           & (cls.model.parent_id == root_id)):
             return
@@ -218,6 +296,11 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_parent_folder(cls, file_id):
+        # Get parent folder of a file
+        # Args:
+        #     file_id: File ID
+        # Returns:
+        #     Parent folder object
         file = cls.model.select().where(cls.model.id == file_id)
         if file.count():
             e, file = cls.get_by_id(file[0].parent_id)
@@ -230,6 +313,11 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def get_all_parent_folders(cls, start_id):
+        # Get all parent folders in path
+        # Args:
+        #     start_id: Starting file ID
+        # Returns:
+        #     List of parent folder objects
         parent_folders = []
         current_id = start_id
         while current_id:
@@ -245,16 +333,19 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def insert(cls, file):
+        # Insert a new file record
+        # Args:
+        #     file: File data dictionary
+        # Returns:
+        #     Created file object
         if not cls.save(**file):
             raise RuntimeError("Database error (File)!")
-        e, file = cls.get_by_id(file["id"])
-        if not e:
-            raise RuntimeError("Database error (File retrieval)!")
-        return file
+        return File(**file)
 
     @classmethod
     @DB.connection_context()
     def delete(cls, file):
+        #
         return cls.delete_by_id(file.id)
 
     @classmethod
@@ -272,8 +363,8 @@ class FileService(CommonService):
                 cls.delete_folder_by_pf_id(user_id, file.id)
             return cls.model.delete().where((cls.model.tenant_id == user_id)
                                             & (cls.model.id == folder_id)).execute(),
-        except Exception as e:
-            print(e)
+        except Exception:
+            logging.exception("delete_folder_by_pf_id")
             raise RuntimeError("Database error (File retrieval)!")
 
     @classmethod
@@ -301,7 +392,8 @@ class FileService(CommonService):
     @classmethod
     @DB.connection_context()
     def add_file_from_kb(cls, doc, kb_folder_id, tenant_id):
-        for _ in File2DocumentService.get_by_document_id(doc["id"]): return
+        for _ in File2DocumentService.get_by_document_id(doc["id"]):
+            return
         file = {
             "id": get_uuid(),
             "parent_id": kb_folder_id,
@@ -321,8 +413,8 @@ class FileService(CommonService):
     def move_file(cls, file_ids, folder_id):
         try:
             cls.filter_update((cls.model.id << file_ids, ), { 'parent_id': folder_id })
-        except Exception as e:
-            print(e)
+        except Exception:
+            logging.exception("move_file")
             raise RuntimeError("Database error (File move)!")
 
     @classmethod
@@ -340,6 +432,8 @@ class FileService(CommonService):
                 MAX_FILE_NUM_PER_USER = int(os.environ.get('MAX_FILE_NUM_PER_USER', 0))
                 if MAX_FILE_NUM_PER_USER > 0 and DocumentService.get_doc_count(kb.tenant_id) >= MAX_FILE_NUM_PER_USER:
                     raise RuntimeError("Exceed the maximum file number of a free user!")
+                if len(file.filename) >= 128:
+                    raise RuntimeError("Exceed the maximum length of file name!")
 
                 filename = duplicate_name(
                     DocumentService.query,
@@ -354,8 +448,17 @@ class FileService(CommonService):
                     location += "_"
                 blob = file.read()
                 STORAGE_IMPL.put(kb.id, location, blob)
+
+                doc_id = get_uuid()
+
+                img = thumbnail_img(filename, blob)
+                thumbnail_location = ''
+                if img is not None:
+                    thumbnail_location = f'thumbnail_{doc_id}.png'
+                    STORAGE_IMPL.put(kb.id, thumbnail_location, img)
+
                 doc = {
-                    "id": get_uuid(),
+                    "id": doc_id,
                     "kb_id": kb.id,
                     "parser_id": self.get_parser(filetype, filename, kb.parser_id),
                     "parser_config": kb.parser_config,
@@ -364,7 +467,7 @@ class FileService(CommonService):
                     "name": filename,
                     "location": location,
                     "size": len(blob),
-                    "thumbnail": thumbnail(filename, blob)
+                    "thumbnail": thumbnail_location
                 }
                 DocumentService.insert(doc)
 
@@ -374,6 +477,41 @@ class FileService(CommonService):
                 err.append(file.filename + ": " + str(e))
 
         return err, files
+
+    @staticmethod
+    def parse_docs(file_objs, user_id):
+        from rag.app import presentation, picture, naive, audio, email
+
+        def dummy(prog=None, msg=""):
+            pass
+
+        FACTORY = {
+            ParserType.PRESENTATION.value: presentation,
+            ParserType.PICTURE.value: picture,
+            ParserType.AUDIO.value: audio,
+            ParserType.EMAIL.value: email
+        }
+        parser_config = {"chunk_token_num": 16096, "delimiter": "\n!?;。；！？", "layout_recognize": "Plain Text"}
+        exe = ThreadPoolExecutor(max_workers=12)
+        threads = []
+        for file in file_objs:
+            kwargs = {
+                "lang": "English",
+                "callback": dummy,
+                "parser_config": parser_config,
+                "from_page": 0,
+                "to_page": 100000,
+                "tenant_id": user_id
+            }
+            filetype = filename_type(file.filename)
+            blob = file.read()
+            threads.append(exe.submit(FACTORY.get(FileService.get_parser(filetype, file.filename, ""), naive).chunk, file.filename, blob, **kwargs))
+
+        res = []
+        for th in threads:
+            res.append("\n".join([ck["content_with_weight"] for ck in th.result()]))
+
+        return "\n\n".join(res)
 
     @staticmethod
     def get_parser(doc_type, filename, default):

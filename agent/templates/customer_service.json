@@ -6,272 +6,360 @@
   "dsl": {
     "answer": [],
     "components": {
-      "answer:0": {
-        "downstream": ["categorize:0", "generate:complain"],
-        "obj": {
-          "component_name": "Answer",
-          "params": {}
-        },
-        "upstream": [
-          "begin",
-          "message:get_contact",
-          "generate:casual",
-          "generate:answer",
-          "generate:ask_contact"
-        ]
-      },
-      "begin": {
-        "downstream": ["answer:0"],
-        "obj": {
-          "component_name": "Begin",
-          "params": {
-            "prologue": "Hi! How can I help you?"
-          }
-        },
-        "upstream": []
-      },
-      "categorize:0": {
+      "Categorize:EightyWavesEnd": {
         "downstream": [
-          "generate:casual",
-          "generate:complain",
-          "message:get_contact",
-          "retrieval:0"
+          "Generate:FullBeersSit",
+          "Message:GoodBugsTurn",
+          "Retrieval:WholeStarsDrive",
+          "Generate:EasyWaysBeg"
         ],
         "obj": {
           "component_name": "Categorize",
+          "inputs": [],
+          "output": null,
           "params": {
             "category_description": {
-              "answer": {
+              "1. contact": {
                 "description": "This answer provide a specific contact information, like e-mail, phone number, wechat number, line number, twitter, discord, etc,.",
-                "examples": "My phone number is 203921\nkevinhu.hk@gmail.com\nThis is my discord number: johndowson_29384",
-                "to": "message:get_contact"
+                "examples": "My phone number is 203921\nkevinhu.hk@gmail.com\nThis is my discord number: johndowson_29384\n13212123432\n8379829",
+                "to": "Message:GoodBugsTurn"
               },
-              "casual": {
+              "2. casual": {
                 "description": "The question is not about the product usage, appearance and how it works. Just casual chat.",
                 "examples": "How are you doing?\nWhat is your name?\nAre you a robot?\nWhat's the weather?\nWill it rain?",
-                "to": "generate:casual"
+                "to": "Generate:EasyWaysBeg"
               },
-              "complain": {
+              "3. complain": {
                 "description": "Complain even curse about the product or service you provide. But the comment is not specific enough.",
                 "examples": "How bad is it.\nIt's really sucks.\nDamn, for God's sake, can it be more steady?\nShit, I just can't use this shit.\nI can't stand it anymore.",
-                "to": "generate:complain"
+                "to": "Generate:FullBeersSit"
               },
-              "product_related": {
+              "4. product related": {
                 "description": "The question is about the product usage, appearance and how it works.",
                 "examples": "Why it always beaming?\nHow to install it onto the wall?\nIt leaks, what to do?\nException: Can't connect to ES cluster\nHow to build the RAGFlow image from scratch",
-                "to": "retrieval:0"
+                "to": "Retrieval:WholeStarsDrive"
               }
             },
-            "llm_id": "deepseek-chat",
-            "message_history_window_size": 8
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 512,
+            "message_history_window_size": 8,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
           }
         },
-        "upstream": ["answer:0"]
+        "upstream": [
+          "RewriteQuestion:AllNightsSniff"
+        ]
       },
-      "generate:answer": {
-        "downstream": ["answer:0"],
+      "Generate:EasyWaysBeg": {
+        "downstream": [
+          "answer:0"
+        ],
         "obj": {
           "component_name": "Generate",
+          "inputs": [],
+          "output": null,
           "params": {
-            "llm_id": "deepseek-chat",
-            "prompt": "You are an intelligent assistant. Please answer the question based on content of knowledge base. When all knowledge base content is irrelevant to the question, your answer must include the sentence \"The answer you are looking for is not found in the knowledge base!\". Answers need to consider chat history.\n      Knowledge base content is as following:\n      {input}\n      The above is the content of knowledge base."
+            "cite": true,
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
+            "message_history_window_size": 12,
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "You are a customer support. But the customer wants to have a casual chat with you instead of consulting about the product. Be nice, funny, enthusiasm and concern.",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
           }
         },
-        "upstream": ["relevant:0"]
+        "upstream": [
+          "Categorize:EightyWavesEnd"
+        ]
       },
-      "generate:ask_contact": {
-        "downstream": ["answer:0"],
+      "Generate:FullBeersSit": {
+        "downstream": [
+          "answer:0"
+        ],
         "obj": {
           "component_name": "Generate",
+          "inputs": [],
+          "output": null,
           "params": {
             "cite": false,
-            "llm_id": "deepseek-chat",
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
             "message_history_window_size": 12,
-            "prompt": "You are a customer support. But you can't answer to customers' question. You need to request their contact like E-mail, phone number, Wechat number, LINE number, twitter, discord, etc,. Product experts will contact them later. Please do not ask the same question twice."
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "You are a customer support. the Customers complain even curse about the products but not specific enough. You need to ask him/her what's the specific problem with the product. Be nice, patient and concern to soothe your customers’ emotions at first place.",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
           }
         },
-        "upstream": ["relevant:0"]
+        "upstream": [
+          "Categorize:EightyWavesEnd"
+        ]
       },
-      "generate:casual": {
-        "downstream": ["answer:0"],
+      "Generate:YoungTrainsSee": {
+        "downstream": [
+          "answer:0"
+        ],
         "obj": {
           "component_name": "Generate",
+          "inputs": [],
+          "output": null,
           "params": {
             "cite": false,
-            "llm_id": "deepseek-chat",
+            "debug_inputs": [],
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "max_tokens": 256,
             "message_history_window_size": 12,
-            "prompt": "You are a customer support. But the customer wants to have a casual chat with you instead of consulting about the product. Be nice, funny, enthusiasm and concern."
+            "output": null,
+            "output_var_name": "output",
+            "parameters": [],
+            "presence_penalty": 0.4,
+            "prompt": "Role: You are a customer support.  \n\nTask: Please answer the question based on content of knowledge base. \n\nRequirements & restrictions:\n  -  DO NOT make things up when all knowledge base content is irrelevant to the question. \n  - Answers need to consider chat history.\n  - Request about customer's contact information like, Wechat number, LINE number, twitter, discord, etc,. , when knowledge base content can't answer his question. So,  product expert could contact him soon to solve his problem.\n\n      Knowledge base content is as following:\n      {Retrieval:WholeStarsDrive}\n      The above is the content of knowledge base.",
+            "query": [],
+            "temperature": 0.1,
+            "top_p": 0.3
           }
         },
-        "upstream": ["categorize:0"]
+        "upstream": [
+          "Retrieval:WholeStarsDrive"
+        ]
       },
-      "generate:complain": {
-        "downstream": ["answer:0"],
-        "obj": {
-          "component_name": "Generate",
-          "params": {
-            "cite": false,
-            "llm_id": "deepseek-chat",
-            "message_history_window_size": 12,
-            "prompt": "You are a customer support. the Customers complain even curse about the products but not specific enough. You need to ask him/her what's the specific problem with the product. Be nice, patient and concern to soothe your customers’ emotions at first place."
-          }
-        },
-        "upstream": ["categorize:0"]
-      },
-      "message:get_contact": {
-        "downstream": ["answer:0"],
+      "Message:GoodBugsTurn": {
+        "downstream": [
+          "answer:0"
+        ],
         "obj": {
           "component_name": "Message",
+          "inputs": [],
+          "output": null,
           "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
             "messages": [
               "Okay, I've already write this down. What else I can do for you?",
               "Get it. What else I can do for you?",
               "Thanks for your trust! Our expert will contact ASAP. So, anything else I can do for you?",
               "Thanks! So, anything else I can do for you?"
-            ]
+            ],
+            "output": null,
+            "output_var_name": "output",
+            "query": []
           }
         },
-        "upstream": ["categorize:0"]
+        "upstream": [
+          "Categorize:EightyWavesEnd"
+        ]
       },
-      "relevant:0": {
-        "downstream": ["generate:answer", "generate:ask_contact"],
-        "obj": {
-          "component_name": "Relevant",
-          "params": {
-            "llm_id": "deepseek-chat",
-            "no": "generate:ask_contact",
-            "temperature": 0.02,
-            "yes": "generate:answer"
-          }
-        },
-        "upstream": ["retrieval:0"]
-      },
-      "retrieval:0": {
-        "downstream": ["relevant:0"],
+      "Retrieval:WholeStarsDrive": {
+        "downstream": [
+          "Generate:YoungTrainsSee"
+        ],
         "obj": {
           "component_name": "Retrieval",
+          "inputs": [],
+          "output": null,
           "params": {
+            "debug_inputs": [],
+            "empty_response": "",
+            "inputs": [],
             "kb_ids": [],
             "keywords_similarity_weight": 0.3,
-            "rerank_id": "BAAI/bge-reranker-v2-m3",
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "query": [],
+            "rerank_id": "",
             "similarity_threshold": 0.2,
             "top_k": 1024,
             "top_n": 6
           }
         },
-        "upstream": ["categorize:0"]
+        "upstream": [
+          "Categorize:EightyWavesEnd"
+        ]
+      },
+      "RewriteQuestion:AllNightsSniff": {
+        "downstream": [
+          "Categorize:EightyWavesEnd"
+        ],
+        "obj": {
+          "component_name": "RewriteQuestion",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "cite": true,
+            "debug_inputs": [],
+            "frequencyPenaltyEnabled": true,
+            "frequency_penalty": 0.7,
+            "inputs": [],
+            "llm_id": "deepseek-chat@DeepSeek",
+            "loop": 1,
+            "maxTokensEnabled": true,
+            "max_tokens": 256,
+            "message_history_window_size": 6,
+            "output": null,
+            "output_var_name": "output",
+            "parameter": "Precise",
+            "parameters": [],
+            "presencePenaltyEnabled": true,
+            "presence_penalty": 0.4,
+            "prompt": "",
+            "query": [],
+            "temperature": 0.1,
+            "temperatureEnabled": true,
+            "topPEnabled": true,
+            "top_p": 0.3
+          }
+        },
+        "upstream": [
+          "answer:0"
+        ]
+      },
+      "answer:0": {
+        "downstream": [
+          "RewriteQuestion:AllNightsSniff"
+        ],
+        "obj": {
+          "component_name": "Answer",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "post_answers": [],
+            "query": []
+          }
+        },
+        "upstream": [
+          "Message:GoodBugsTurn",
+          "Generate:FullBeersSit",
+          "begin",
+          "Generate:YoungTrainsSee",
+          "Generate:EasyWaysBeg"
+        ]
+      },
+      "begin": {
+        "downstream": [
+          "answer:0"
+        ],
+        "obj": {
+          "component_name": "Begin",
+          "inputs": [],
+          "output": null,
+          "params": {
+            "debug_inputs": [],
+            "inputs": [],
+            "message_history_window_size": 22,
+            "output": null,
+            "output_var_name": "output",
+            "prologue": "Hi! How can I help you?",
+            "query": []
+          }
+        },
+        "upstream": []
       }
     },
+    "embed_id": "",
     "graph": {
       "edges": [
         {
-          "id": "63a2f242-8e71-4098-a46a-459a76d538bd",
-          "label": "",
+          "id": "reactflow__edge-Retrieval:WholeStarsDriveb-Generate:YoungTrainsSeeb",
+          "markerEnd": "logo",
+          "source": "Retrieval:WholeStarsDrive",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:YoungTrainsSee",
+          "targetHandle": "b",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Message:GoodBugsTurnb-answer:0b",
+          "markerEnd": "logo",
+          "source": "Message:GoodBugsTurn",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "answer:0",
+          "targetHandle": "b",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-Generate:FullBeersSitb-answer:0b",
+          "markerEnd": "logo",
+          "source": "Generate:FullBeersSit",
+          "sourceHandle": "b",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "answer:0",
+          "targetHandle": "b",
+          "type": "buttonEdge"
+        },
+        {
+          "id": "reactflow__edge-begin-answer:0b",
+          "markerEnd": "logo",
           "source": "begin",
-          "target": "answer:0"
-        },
-        {
-          "id": "7f68384d-3441-4bfa-bf13-69af67e857d2",
-          "label": "",
-          "source": "categorize:0",
-          "sourceHandle": "casual",
-          "target": "generate:casual"
-        },
-        {
-          "id": "c9bf8e81-9345-4885-b565-be2f5b16f6ef",
-          "label": "",
-          "source": "categorize:0",
-          "sourceHandle": "complain",
-          "target": "generate:complain"
-        },
-        {
-          "id": "2f326699-621b-4d28-ab98-70d99ad21add",
-          "label": "",
-          "source": "categorize:0",
-          "sourceHandle": "answer",
-          "target": "message:get_contact"
-        },
-        {
-          "id": "reactflow__edge-relevant:0yes-generate:answerc",
-          "source": "relevant:0",
-          "sourceHandle": "yes",
-          "target": "generate:answer",
-          "targetHandle": "c"
-        },
-        {
-          "id": "reactflow__edge-relevant:0no-generate:ask_contactc",
-          "source": "relevant:0",
-          "sourceHandle": "no",
-          "target": "generate:ask_contact",
-          "targetHandle": "c"
-        },
-        {
-          "id": "reactflow__edge-message:get_contactb-answer:0c",
-          "markerEnd": "logo",
-          "source": "message:get_contact",
-          "sourceHandle": "b",
+          "sourceHandle": null,
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
           "target": "answer:0",
-          "targetHandle": "c",
+          "targetHandle": "b",
           "type": "buttonEdge"
         },
         {
-          "id": "reactflow__edge-generate:casualb-answer:0d",
+          "id": "reactflow__edge-Generate:YoungTrainsSeec-answer:0b",
           "markerEnd": "logo",
-          "source": "generate:casual",
-          "sourceHandle": "b",
+          "source": "Generate:YoungTrainsSee",
+          "sourceHandle": "c",
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
           "target": "answer:0",
-          "targetHandle": "d",
+          "targetHandle": "b",
           "type": "buttonEdge"
         },
         {
-          "id": "reactflow__edge-generate:answerb-answer:0d",
-          "markerEnd": "logo",
-          "source": "generate:answer",
-          "sourceHandle": "b",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "answer:0",
-          "targetHandle": "d",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-categorize:0product_related-retrieval:0a",
-          "markerEnd": "logo",
-          "source": "categorize:0",
-          "sourceHandle": "product_related",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "retrieval:0",
-          "targetHandle": "a",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-retrieval:0d-relevant:0c",
-          "markerEnd": "logo",
-          "source": "retrieval:0",
-          "sourceHandle": "d",
-          "style": {
-            "stroke": "rgb(202 197 245)",
-            "strokeWidth": 2
-          },
-          "target": "relevant:0",
-          "targetHandle": "c",
-          "type": "buttonEdge"
-        },
-        {
-          "id": "reactflow__edge-answer:0c-categorize:0c",
+          "id": "xy-edge__answer:0c-RewriteQuestion:AllNightsSniffb",
           "markerEnd": "logo",
           "source": "answer:0",
           "sourceHandle": "c",
@@ -279,35 +367,92 @@
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
-          "target": "categorize:0",
+          "target": "RewriteQuestion:AllNightsSniff",
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__RewriteQuestion:AllNightsSniffc-Categorize:EightyWavesEnda",
+          "markerEnd": "logo",
+          "source": "RewriteQuestion:AllNightsSniff",
+          "sourceHandle": "c",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Categorize:EightyWavesEnd",
+          "targetHandle": "a",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "reactflow__edge-Categorize:EightyWavesEnd3. complain-Generate:FullBeersSitc",
+          "markerEnd": "logo",
+          "source": "Categorize:EightyWavesEnd",
+          "sourceHandle": "3. complain",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:FullBeersSit",
           "targetHandle": "c",
           "type": "buttonEdge"
         },
         {
-          "id": "reactflow__edge-answer:0a-generate:complaind",
+          "id": "reactflow__edge-Categorize:EightyWavesEnd1. contact-Message:GoodBugsTurnc",
           "markerEnd": "logo",
-          "source": "generate:complain",
-          "sourceHandle": "a",
+          "source": "Categorize:EightyWavesEnd",
+          "sourceHandle": "1. contact",
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
-          "target": "answer:0",
-          "targetHandle": "d",
+          "target": "Message:GoodBugsTurn",
+          "targetHandle": "c",
           "type": "buttonEdge"
         },
         {
-          "id": "reactflow__edge-generate:ask_contacta-answer:0d",
+          "id": "xy-edge__Categorize:EightyWavesEnd4. product related-Retrieval:WholeStarsDrivec",
           "markerEnd": "logo",
-          "source": "generate:ask_contact",
-          "sourceHandle": "a",
+          "source": "Categorize:EightyWavesEnd",
+          "sourceHandle": "4. product related",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Retrieval:WholeStarsDrive",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Generate:EasyWaysBegb-answer:0b",
+          "markerEnd": "logo",
+          "source": "Generate:EasyWaysBeg",
+          "sourceHandle": "b",
           "style": {
             "stroke": "rgb(202 197 245)",
             "strokeWidth": 2
           },
           "target": "answer:0",
-          "targetHandle": "d",
-          "type": "buttonEdge"
+          "targetHandle": "b",
+          "type": "buttonEdge",
+          "zIndex": 1001
+        },
+        {
+          "id": "xy-edge__Categorize:EightyWavesEnd2. casual-Generate:EasyWaysBegc",
+          "markerEnd": "logo",
+          "source": "Categorize:EightyWavesEnd",
+          "sourceHandle": "2. casual",
+          "style": {
+            "stroke": "rgb(202 197 245)",
+            "strokeWidth": 2
+          },
+          "target": "Generate:EasyWaysBeg",
+          "targetHandle": "c",
+          "type": "buttonEdge",
+          "zIndex": 1001
         }
       ],
       "nodes": [
@@ -320,21 +465,24 @@
             "name": "Opener"
           },
           "dragging": false,
-          "height": 50,
+          "height": 44,
           "id": "begin",
+          "measured": {
+            "height": 44,
+            "width": 100
+          },
           "position": {
-            "x": 404.55092213629115,
-            "y": 296.8772566137603
+            "x": 392.4805720357097,
+            "y": -51.634011497163186
           },
           "positionAbsolute": {
-            "x": 404.55092213629115,
-            "y": 296.8772566137603
+            "x": 392.4805720357097,
+            "y": -51.634011497163186
           },
           "selected": false,
           "sourcePosition": "left",
           "targetPosition": "right",
-          "type": "beginNode",
-          "width": 50
+          "type": "beginNode"
         },
         {
           "data": {
@@ -343,134 +491,138 @@
             "name": "Interface"
           },
           "dragging": false,
-          "height": 100,
+          "height": 44,
           "id": "answer:0",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
           "position": {
-            "x": 638.4631551507972,
-            "y": 71.36899317395626
+            "x": 254.80252337926834,
+            "y": 311.451851495964
           },
           "positionAbsolute": {
-            "x": 638.4631551507972,
-            "y": 71.36899317395626
+            "x": 248.41227675535197,
+            "y": 216.6631932412045
           },
           "selected": false,
           "sourcePosition": "left",
           "targetPosition": "right",
           "type": "logicNode",
-          "width": 100
+          "width": 200
         },
         {
           "data": {
             "form": {
               "category_description": {
-                "answer": {
+                "1. contact": {
                   "description": "This answer provide a specific contact information, like e-mail, phone number, wechat number, line number, twitter, discord, etc,.",
-                  "examples": "My phone number is 203921\nkevinhu.hk@gmail.com\nThis is my discord number: johndowson_29384",
-                  "to": "message:get_contact"
+                  "examples": "My phone number is 203921\nkevinhu.hk@gmail.com\nThis is my discord number: johndowson_29384\n13212123432\n8379829",
+                  "to": "Message:GoodBugsTurn"
                 },
-                "casual": {
+                "2. casual": {
                   "description": "The question is not about the product usage, appearance and how it works. Just casual chat.",
                   "examples": "How are you doing?\nWhat is your name?\nAre you a robot?\nWhat's the weather?\nWill it rain?",
-                  "to": "generate:casual"
+                  "to": "Generate:EasyWaysBeg"
                 },
-                "complain": {
+                "3. complain": {
                   "description": "Complain even curse about the product or service you provide. But the comment is not specific enough.",
                   "examples": "How bad is it.\nIt's really sucks.\nDamn, for God's sake, can it be more steady?\nShit, I just can't use this shit.\nI can't stand it anymore.",
-                  "to": "generate:complain"
+                  "to": "Generate:FullBeersSit"
                 },
-                "product_related": {
+                "4. product related": {
                   "description": "The question is about the product usage, appearance and how it works.",
                   "examples": "Why it always beaming?\nHow to install it onto the wall?\nIt leaks, what to do?\nException: Can't connect to ES cluster\nHow to build the RAGFlow image from scratch",
-                  "to": "retrieval:0"
+                  "to": "Retrieval:WholeStarsDrive"
                 }
               },
-              "llm_id": "deepseek-chat",
-              "message_history_window_size": 8
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 512,
+              "message_history_window_size": 8,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
             },
             "label": "Categorize",
             "name": "Question Categorize"
           },
           "dragging": false,
-          "height": 100,
-          "id": "categorize:0",
+          "height": 223,
+          "id": "Categorize:EightyWavesEnd",
+          "measured": {
+            "height": 223,
+            "width": 200
+          },
           "position": {
-            "x": -5.661990007284574,
-            "y": 461.0436851280078
+            "x": -47.29188154660176,
+            "y": 702.9033359893137
           },
           "positionAbsolute": {
-            "x": -5.661990007284574,
-            "y": 461.0436851280078
+            "x": -47.29188154660176,
+            "y": 702.9033359893137
           },
           "selected": false,
           "sourcePosition": "left",
           "targetPosition": "right",
           "type": "categorizeNode",
-          "width": 100
+          "width": 200
         },
         {
           "data": {
             "form": {
               "cite": false,
-              "llm_id": "deepseek-chat",
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
               "message_history_window_size": 12,
-              "prompt": "You are a customer support. But the customer wants to have a casual chat with you instead of consulting about the product. Be nice, funny, enthusiasm and concern.",
-              "temperature": 0.9
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "Role: You are a customer support.  \n\nTask: Please answer the question based on content of knowledge base. \n\nRequirements & restrictions:\n  -  DO NOT make things up when all knowledge base content is irrelevant to the question. \n  - Answers need to consider chat history.\n  - Request about customer's contact information like, Wechat number, LINE number, twitter, discord, etc,. , when knowledge base content can't answer his question. So,  product expert could contact him soon to solve his problem.\n\n      Knowledge base content is as following:\n      {Retrieval:WholeStarsDrive}\n      The above is the content of knowledge base.",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
             },
             "label": "Generate",
-            "name": "Casual chat"
+            "name": "Product info"
           },
           "dragging": false,
-          "height": 150,
-          "id": "generate:casual",
+          "height": 86,
+          "id": "Generate:YoungTrainsSee",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
           "position": {
-            "x": 314.3012082990795,
-            "y": -86.46384197439605
+            "x": 559.5686776472737,
+            "y": 290.2322665670026
           },
           "positionAbsolute": {
-            "x": 314.3012082990795,
-            "y": -86.46384197439605
+            "x": 634.1215549262979,
+            "y": 195.4436083122431
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 150
-        },
-        {
-          "data": {
-            "form": {
-              "cite": false,
-              "llm_id": "deepseek-chat",
-              "message_history_window_size": 12,
-              "prompt": "You are a customer support. the Customers complain even curse about the products but not specific enough. You need to ask him/her what's the specific problem with the product. Be nice, patient and concern to soothe your customers’ emotions at first place.",
-              "temperature": 0.9
-            },
-            "label": "Generate",
-            "name": "Soothe mood"
-          },
-          "dragging": false,
-          "height": 150,
-          "id": "generate:complain",
-          "position": {
-            "x": 638.3075558015155,
-            "y": 397.78425175650347
-          },
-          "positionAbsolute": {
-            "x": 638.3075558015155,
-            "y": 397.78425175650347
-          },
-          "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 150
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode",
+          "width": 200
         },
         {
           "data": {
             "form": {
               "kb_ids": [],
               "keywords_similarity_weight": 0.3,
-              "rerank_id": "BAAI/bge-reranker-v2-m3",
               "similarity_threshold": 0.2,
               "top_k": 1024,
               "top_n": 6
@@ -479,105 +631,25 @@
             "name": "Search product info"
           },
           "dragging": false,
-          "height": 100,
-          "id": "retrieval:0",
+          "height": 44,
+          "id": "Retrieval:WholeStarsDrive",
+          "measured": {
+            "height": 44,
+            "width": 200
+          },
           "position": {
-            "x": 46.056812569554474,
-            "y": -107.6498359566391
+            "x": 667.7576170144173,
+            "y": 897.9742909437947
           },
           "positionAbsolute": {
-            "x": 46.056812569554474,
-            "y": -107.6498359566391
+            "x": 674.4543037737495,
+            "y": 855.3858500356805
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 100
-        },
-        {
-          "data": {
-            "form": {
-              "llm_id": "deepseek-chat",
-              "no": "generate:ask_contact",
-              "temperature": 0.02,
-              "yes": "generate:answer"
-            },
-            "label": "Relevant",
-            "name": "Relevant?"
-          },
-          "dragging": false,
-          "height": 70,
-          "id": "relevant:0",
-          "position": {
-            "x": 46.93961268163955,
-            "y": -332.00374591025786
-          },
-          "positionAbsolute": {
-            "x": 46.93961268163955,
-            "y": -332.00374591025786
-          },
-          "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "relevantNode",
-          "width": 70
-        },
-        {
-          "data": {
-            "form": {
-              "llm_id": "deepseek-chat",
-              "prompt": "You are an intelligent assistant. Please answer the question based on content of knowledge base. When all knowledge base content is irrelevant to the question, your answer must include the sentence \"The answer you are looking for is not found in the knowledge base!\". Answers need to consider chat history.\n      Knowledge base content is as following:\n      {input}\n      The above is the content of knowledge base.",
-              "temperature": 0.02
-            },
-            "label": "Generate",
-            "name": "Product info"
-          },
-          "dragging": false,
-          "height": 150,
-          "id": "generate:answer",
-          "position": {
-            "x": 413.5337945397181,
-            "y": -255.54195657210374
-          },
-          "positionAbsolute": {
-            "x": 413.5337945397181,
-            "y": -255.54195657210374
-          },
-          "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 150
-        },
-        {
-          "data": {
-            "form": {
-              "cite": false,
-              "llm_id": "deepseek-chat",
-              "message_history_window_size": 12,
-              "prompt": "You are a customer support. But you can't answer to customers' question. You need to request their contact like E-mail, phone number, Wechat number, LINE number, twitter, discord, etc,. Product experts will contact them later. Please do not ask the same question twice.",
-              "temperature": 0.9
-            },
-            "label": "Generate",
-            "name": "Request contact"
-          },
-          "dragging": false,
-          "height": 150,
-          "id": "generate:ask_contact",
-          "position": {
-            "x": 636.1639603425758,
-            "y": -391.62634222619454
-          },
-          "positionAbsolute": {
-            "x": 636.1639603425758,
-            "y": -391.62634222619454
-          },
-          "selected": true,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 150
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "retrievalNode",
+          "width": 200
         },
         {
           "data": {
@@ -593,21 +665,382 @@
             "name": "What else?"
           },
           "dragging": false,
-          "height": 100,
-          "id": "message:get_contact",
+          "height": 185,
+          "id": "Message:GoodBugsTurn",
+          "measured": {
+            "height": 185,
+            "width": 200
+          },
           "position": {
-            "x": 261.48313054267913,
-            "y": 119.6490357959155
+            "x": 255.51379306491577,
+            "y": 378.5054855804349
           },
           "positionAbsolute": {
-            "x": 261.48313054267913,
-            "y": 119.6490357959155
+            "x": 255.51379306491577,
+            "y": 378.5054855804349
           },
           "selected": false,
-          "sourcePosition": "left",
-          "targetPosition": "right",
-          "type": "logicNode",
-          "width": 100
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "messageNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "cite": false,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "You are a customer support. the Customers complain even curse about the products but not specific enough. You need to ask him/her what's the specific problem with the product. Be nice, patient and concern to soothe your customers’ emotions at first place.",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "Soothe mood"
+          },
+          "dragging": false,
+          "height": 86,
+          "id": "Generate:FullBeersSit",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
+          "position": {
+            "x": 310.50668739661876,
+            "y": 752.9913068679249
+          },
+          "positionAbsolute": {
+            "x": 282.6177403844678,
+            "y": 738.0651678233716
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "loop": 1,
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 6,
+              "parameter": "Precise",
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "RewriteQuestion",
+            "name": "Refine Question"
+          },
+          "dragging": false,
+          "height": 86,
+          "id": "RewriteQuestion:AllNightsSniff",
+          "measured": {
+            "height": 86,
+            "width": 200
+          },
+          "position": {
+            "x": -76.01780399206896,
+            "y": 578.5800110192073
+          },
+          "positionAbsolute": {
+            "x": 324.6407948253129,
+            "y": 858.5461701082726
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "rewriteNode",
+          "width": 200
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Receives the user's input and displays content returned by the large model or a static message."
+            },
+            "label": "Note",
+            "name": "N: Interface"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 165,
+          "id": "Note:NeatEelsJam",
+          "measured": {
+            "height": 165,
+            "width": 246
+          },
+          "position": {
+            "x": 254.241356823277,
+            "y": 125.88467020717172
+          },
+          "positionAbsolute": {
+            "x": 264.90767475037154,
+            "y": 38.182206466391165
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 157,
+            "width": 218
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 246
+        },
+        {
+          "data": {
+            "form": {
+              "text": "The large model returns the product information needed by the user based on the content in the knowledge base."
+            },
+            "label": "Note",
+            "name": "N: Product info"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 174,
+          "id": "Note:VastBusesStop",
+          "measured": {
+            "height": 174,
+            "width": 251
+          },
+          "position": {
+            "x": 552.2937732862443,
+            "y": 112.23751311378777
+          },
+          "positionAbsolute": {
+            "x": 631.2555350351256,
+            "y": 39.608910328453874
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 146,
+            "width": 239
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 251
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Static messages.\nDefine response after receive user's contact information."
+            },
+            "label": "Note",
+            "name": "N: What else?"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 140,
+          "id": "Note:YellowSlothsCall",
+          "measured": {
+            "height": 140,
+            "width": 301
+          },
+          "position": {
+            "x": 560.5616335948474,
+            "y": 442.25458284060795
+          },
+          "positionAbsolute": {
+            "x": 555.9717758467305,
+            "y": 383.35075112209097
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 301
+        },
+        {
+          "data": {
+            "form": {
+              "text": "LLMs chat with users based on the prompts."
+            },
+            "label": "Note",
+            "name": "N: Casual & Soothe"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 128,
+          "id": "Note:MightyMealsBegin",
+          "measured": {
+            "height": 128,
+            "width": 330
+          },
+          "position": {
+            "x": 602.4076699989065,
+            "y": 727.2225988541959
+          },
+          "positionAbsolute": {
+            "x": 579.1117030677617,
+            "y": 639.9891755684794
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "style": {
+            "height": 128,
+            "width": 330
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 330
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Receives content related to product usage, appearance, and operation, searches the knowledge base, and returns the retrieved content."
+            },
+            "label": "Note",
+            "name": "N: Search product info"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 164,
+          "id": "Note:PurpleReadersLike",
+          "measured": {
+            "height": 164,
+            "width": 288
+          },
+          "position": {
+            "x": 671.3026627091103,
+            "y": 969.3826268059544
+          },
+          "positionAbsolute": {
+            "x": 713.5806084319482,
+            "y": 962.5655101584402
+          },
+          "resizing": false,
+          "selected": true,
+          "sourcePosition": "right",
+          "style": {
+            "height": 163,
+            "width": 271
+          },
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 288
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Complete questions by conversation history.\nUser: What's RAGFlow?\nAssistant: RAGFlow is xxx.\nUser: How to deploy it?\n\nRefine it: How to deploy RAGFlow?"
+            },
+            "label": "Note",
+            "name": "N: Refine Question"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 247,
+          "id": "Note:TidyJarsCarry",
+          "measured": {
+            "height": 247,
+            "width": 279
+          },
+          "position": {
+            "x": -76.39310344274921,
+            "y": 303.33344775187555
+          },
+          "positionAbsolute": {
+            "x": 360.7515003553832,
+            "y": 968.8600371483907
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 279
+        },
+        {
+          "data": {
+            "form": {
+              "text": "Determines which category the user's input belongs to and passes it to different components."
+            },
+            "label": "Note",
+            "name": "N: Question cate"
+          },
+          "dragHandle": ".note-drag-handle",
+          "dragging": false,
+          "height": 141,
+          "id": "Note:BigPawsThink",
+          "measured": {
+            "height": 141,
+            "width": 289
+          },
+          "position": {
+            "x": -32.89190582677969,
+            "y": 999.0009887363577
+          },
+          "positionAbsolute": {
+            "x": -12.744183915886367,
+            "y": 966.112564833565
+          },
+          "resizing": false,
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "noteNode",
+          "width": 289
+        },
+        {
+          "data": {
+            "form": {
+              "cite": true,
+              "frequencyPenaltyEnabled": true,
+              "frequency_penalty": 0.7,
+              "llm_id": "deepseek-chat@DeepSeek",
+              "maxTokensEnabled": true,
+              "max_tokens": 256,
+              "message_history_window_size": 12,
+              "parameter": "Precise",
+              "parameters": [],
+              "presencePenaltyEnabled": true,
+              "presence_penalty": 0.4,
+              "prompt": "You are a customer support. But the customer wants to have a casual chat with you instead of consulting about the product. Be nice, funny, enthusiasm and concern.",
+              "temperature": 0.1,
+              "temperatureEnabled": true,
+              "topPEnabled": true,
+              "top_p": 0.3
+            },
+            "label": "Generate",
+            "name": "Causal chat"
+          },
+          "dragging": false,
+          "id": "Generate:EasyWaysBeg",
+          "measured": {
+            "height": 106,
+            "width": 200
+          },
+          "position": {
+            "x": 271.29649004050304,
+            "y": 621.5563111579619
+          },
+          "selected": false,
+          "sourcePosition": "right",
+          "targetPosition": "left",
+          "type": "generateNode"
         }
       ]
     },
