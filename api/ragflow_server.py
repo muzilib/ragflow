@@ -19,6 +19,7 @@
 # beartype_all(conf=BeartypeConf(violation_type=UserWarning))    # <-- emit warnings from all code
 
 from api.utils.log_utils import initRootLogger
+from plugin import GlobalPluginManager
 initRootLogger("ragflow_server")
 
 import logging
@@ -47,6 +48,8 @@ from rag.utils.redis_conn import RedisDistributedLock
 
 stop_event = threading.Event()
 
+RAGFLOW_DEBUGPY_LISTEN = int(os.environ.get('RAGFLOW_DEBUGPY_LISTEN', "0"))
+
 def update_progress():
     lock_value = str(uuid.uuid4())
     redis_lock = RedisDistributedLock("update_progress", lock_value=lock_value, timeout=60)
@@ -59,6 +62,8 @@ def update_progress():
             stop_event.wait(6)
         except Exception:
             logging.exception("update_progress exception")
+        finally:
+            redis_lock.release()
 
 def signal_handler(sig, frame):
     logging.info("Received interrupt signal, shutting down...")
@@ -85,6 +90,11 @@ if __name__ == '__main__':
     settings.init_settings()
     print_rag_settings()
 
+    if RAGFLOW_DEBUGPY_LISTEN > 0:
+        logging.info(f"debugpy listen on {RAGFLOW_DEBUGPY_LISTEN}")
+        import debugpy
+        debugpy.listen(("0.0.0.0", RAGFLOW_DEBUGPY_LISTEN))
+
     # init db
     init_web_db()
     init_web_data()
@@ -109,6 +119,8 @@ if __name__ == '__main__':
 
     RuntimeConfig.init_env()
     RuntimeConfig.init_config(JOB_SERVER_HOST=settings.HOST_IP, HTTP_PORT=settings.HOST_PORT)
+
+    GlobalPluginManager.load_plugins()
 
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
